@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SINGLE ICECREAM</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  
+<div class="screen active" id="screen-landing">
+  <div class="landing">
+    <div class="landing-overlay"></div>
+    <div class="landing-content">
+      <div class="landing-logo">🍦</div>
+      <h1>SINGLE ICECREAM</h1>
+      <p>Tezkor va mazali buyurtma berish xizmati</p>
+      <div class="landing-buttons">
+        <button class="landing-btn landing-btn-primary" onclick="showScreen('menu')">🍨 Menyuga o'tish</button>
+        <button class="landing-btn landing-btn-secondary" onclick="goToAdmin()">🔐 Admin panel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="screen" id="screen-menu">
+  <div class="topbar">
+    <div class="brand">🍦 SINGLE ICECREAM</div>
+    <div class="topbar-right">
+      <button class="pill" onclick="showScreen('landing')">🏠 Bosh sahifa</button>
+      <div class="pill" id="tableBadge">Stol: #01</div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1>Muzqaymoq buyurtma qiling 🍨</h1>
+    <p>Tezkor va mazali buyurtma berish xizmati</p>
+  </div>
+
+  <div class="wrap">
+    <div class="location-bar">
+      📍 Joylashuv:
+      <select id="locationSelect">
+        <option>Old taraf (Zal)</option>
+        <option>Orqa taraf (Terassa)</option>
+        <option>VIP xona</option>
+        <option>Olib ketish</option>
+      </select>
+    </div>
+    <div><div class="menu-grid" id="menuGrid"></div></div>
+    <div class="cart-panel">
+      <h2>🛒 Buyurtmangiz</h2>
+      <div id="cartList"><div class="cart-empty">Savatingiz bo'sh</div></div>
+      <div class="cart-total"><span>Jami:</span><span id="cartTotal">0 so'm</span></div>
+      <button class="btn btn-primary" id="orderBtn" disabled>Buyurtma berish</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCREEN 3: ADMIN LOGIN ============ -->
+<div class="screen" id="screen-admin-login">
+  <div class="login-wrap">
+    <div class="login-card">
+      <h1>🍦 Admin panel</h1>
+      <p>SINGLE ICECREAM boshqaruvi</p>
+      <div class="field">
+        <label>Nik name</label>
+        <input type="text" id="loginUser" autocomplete="username" />
+      </div>
+      <div class="field">
+        <label>Parol</label>
+        <input type="password" id="loginPass" autocomplete="current-password" />
+      </div>
+      <button class="btn btn-primary" id="loginBtn">Kirish</button>
+      <div class="error-msg" id="loginError"></div>
+      <a class="back-link" onclick="showScreen('landing')">← Bosh sahifaga qaytish</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCREEN 1: LANDING ============ -->
+<div class="screen active" id="screen-landing">
+  <div class="landing">
+    <div class="landing-overlay"></div>
+    <div class="landing-content">
+      <div class="landing-logo">🍦</div>
+      <h1>SINGLE ICECREAM</h1>
+      <p>Tezkor va mazali buyurtma berish xizmati</p>
+      <div class="landing-buttons">
+        <button class="landing-btn landing-btn-primary" onclick="showScreen('menu')">🍨 Menyuga o'tish</button>
+        <button class="landing-btn landing-btn-secondary" onclick="goToAdmin()">🔐 Admin panel</button>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- ============ SCREEN 2: CUSTOMER MENU ============ -->
+<div class="screen" id="screen-menu">
+  <div class="topbar">
+    <div class="brand">🍦 SINGLE ICECREAM</div>
+    <div class="topbar-right">
+      <button class="pill" onclick="showScreen('landing')">🏠 Bosh sahifa</button>
+      <div class="pill" id="tableBadge">Stol: #01</div>
+    </div>
+  </div>
+ 
+  <div class="hero">
+    <h1>Muzqaymoq buyurtma qiling 🍨</h1>
+    <p>Tezkor va mazali buyurtma berish xizmati</p>
+  </div>
+ 
+  <div class="wrap">
+    <div class="location-bar">
+      📍 Joylashuv:
+      <select id="locationSelect">
+        <option>Old taraf (Zal)</option>
+        <option>Orqa taraf (Terassa)</option>
+        <option>VIP xona</option>
+        <option>Olib ketish</option>
+      </select>
+      <div class="category-tabs" id="categoryTabs">
+        <button class="cat-btn active" data-cat="muzqaymoq">🍦 Muzqaymoq</button>
+        <button class="cat-btn" data-cat="yeguliklar">🍪 Yeguliklar</button>
+        <button class="cat-btn" data-cat="ichimliklar">🥤 Ichimliklar</button>
+      </div>
+    </div>
+    <div><div class="menu-grid" id="menuGrid"></div></div>
+    <div class="cart-panel">
+      <h2>🛒 Buyurtmangiz</h2>
+      <div id="cartList"><div class="cart-empty">Savatingiz bo'sh</div></div>
+      <div class="cart-total"><span>Jami:</span><span id="cartTotal">0 so'm</span></div>
+      <button class="btn btn-primary" id="orderBtn" disabled>Buyurtma berish</button>
+    </div>
+  </div>
+</div>
+ 
+<!-- ============ SCREEN 3: ADMIN LOGIN ============ -->
+<div class="screen" id="screen-admin-login">
+  <div class="login-wrap">
+    <div class="login-card">
+      <h1>🍦 Admin panel</h1>
+      <p>SINGLE ICECREAM boshqaruvi</p>
+      <div class="field">
+        <label>Nik name</label>
+        <input type="text" id="loginUser" autocomplete="username" />
+      </div>
+      <div class="field">
+        <label>Parol</label>
+        <input type="password" id="loginPass" autocomplete="current-password" />
+      </div>
+      <button class="btn btn-primary" id="loginBtn">Kirish</button>
+      <div class="error-msg" id="loginError"></div>
+      <a class="back-link" onclick="showScreen('landing')">← Bosh sahifaga qaytish</a>
+    </div>
+  </div>
+</div>
+ 
+<!-- ============ SCREEN 4: ADMIN DASHBOARD ============ -->
+<div class="screen" id="screen-admin-dashboard">
+  <div class="topbar">
+    <div class="brand">🍦 SINGLE ICECREAM — Admin</div>
+    <div class="topbar-right">
+      <button class="pill" onclick="showScreen('landing')">🏠 Bosh sahifa</button>
+      <button class="logout-btn" id="logoutBtn">Chiqish</button>
+    </div>
+  </div>
+ 
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="orders">Buyurtmalar</button>
+    <button class="tab-btn" data-tab="menu">Menyu</button>
+    <button class="tab-btn" data-tab="settings">Sozlamalar</button>
+  </div>
+ 
+  <div class="admin-content">
+    <div id="tab-orders">
+      <div class="section-head">
+        <h2>Buyurtmalar</h2>
+        <span class="cart-item-sub">Har 3 soniyada avtomatik yangilanadi</span>
+      </div>
+      <div id="ordersList"></div>
+    </div>
+ 
+    <div id="tab-menu" style="display:none;">
+      <div class="section-head"><h2>Menyu boshqaruvi</h2></div>
+      <div class="menu-admin-grid" id="menuAdminGrid"></div>
+      <div class="section-head"><h2 style="font-size:16px;">Yangi taom qo'shish</h2></div>
+      <div class="add-form">
+        <div class="field"><label>Nomi</label><input type="text" id="newName" placeholder="Masalan: Banan Split" /></div>
+        <div class="field">
+          <label>Kategoriya</label>
+          <select id="newCategory">
+            <option value="muzqaymoq">🍦 Muzqaymoq</option>
+            <option value="yeguliklar">🍪 Yeguliklar</option>
+            <option value="ichimliklar">🥤 Ichimliklar</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Turi</label>
+          <select id="newType">
+            <option value="simple">Oddiy (bitta narx)</option>
+            <option value="sized">Ichimlik (1L / 1,5L / 2L)</option>
+          </select>
+        </div>
+        <div class="field" id="simplePriceField"><label>Narxi (so'm)</label><input type="number" id="newPrice" placeholder="20000" /></div>
+        <div class="field" id="size1Field" style="display:none;"><label>1L narxi</label><input type="number" id="newPrice1" placeholder="12000" /></div>
+        <div class="field" id="size2Field" style="display:none;"><label>1,5L narxi</label><input type="number" id="newPrice2" placeholder="15000" /></div>
+        <div class="field" id="size3Field" style="display:none;"><label>2L narxi</label><input type="number" id="newPrice3" placeholder="18000" /></div>
+        <div class="field"><label>Rasm URL</label><input type="text" id="newImage" placeholder="https://... yoki images/rasm.jpg" /></div>
+        <button class="btn btn-primary" id="addItemBtn">+ Qo'shish</button>
+      </div>
+    </div>
+ 
+    <div id="tab-settings" style="display:none;">
+      <div class="section-head"><h2>Nik name / parolni o'zgartirish</h2></div>
+      <div class="add-form" style="grid-template-columns: 1fr 1fr;">
+        <div class="field"><label>Yangi nik name</label><input type="text" id="newUser" /></div>
+        <div class="field"><label>Yangi parol</label><input type="password" id="newPass" /></div>
+        <button class="btn btn-primary" id="saveCredsBtn" style="grid-column:1/-1;">Saqlash</button>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<div class="toast" id="toast"></div>
+
+
+<script src="./Data.js"></script>
+</body>
+</html>
