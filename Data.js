@@ -1,13 +1,7 @@
-/* ============================================================
-   SINGLE ICECREAM — bitta fayldagi to'liq ilova
-   ============================================================ */
-
-/* ---------------- DATA LAYER (localStorage) ---------------- */
-
 const DB_KEYS = { MENU: "si_menu", ORDERS: "si_orders", ADMIN: "si_admin_creds" };
 
 const DEFAULT_MENU = [
-  { id: "m1", name: "Qaymoqli klassik", price: 15000, image: "", active: true, category: "muzqaymoq", type: "simple" },
+  { id: "m1", name: "Qaymoqli klassik", price: 15000, image: "https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?auto=format&fit=crop&w=600&q=60", active: true, category: "muzqaymoq", type: "simple" },
   { id: "m2", name: "Shokoladli premium", price: 18000, image: "https://images.unsplash.com/photo-1560008581-09826d1de69e?auto=format&fit=crop&w=600&q=60", active: true, category: "muzqaymoq", type: "simple" },
   { id: "m3", name: "Mevabop (Mix)", price: 20000, image: "https://images.unsplash.com/photo-1576506295286-5cda18df43e7?auto=format&fit=crop&w=600&q=60", active: true, category: "muzqaymoq", type: "simple" },
   { id: "m4", name: "Klassik Mix", price: 25000, image: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=600&q=60", active: true, category: "muzqaymoq", type: "simple" },
@@ -388,42 +382,110 @@ function renderMenuAdmin() {
   });
 }
 
-function editItem(item) {
-  const name = prompt("Taom nomi:", item.name);
-  if (name === null) return;
-  const image = prompt("Rasm URL:", item.image);
-  if (image === null) return;
-  const category = prompt("Kategoriya (muzqaymoq / yeguliklar / ichimliklar):", item.category || "muzqaymoq");
-  if (category === null) return;
+/* ---------------- IMAGE FILE -> COMPRESSED BASE64 ---------------- */
 
-  const changes = {
-    name: name.trim() || item.name,
-    image: image.trim() || item.image,
-    category: ["muzqaymoq", "yeguliklar", "ichimliklar"].includes(category.trim()) ? category.trim() : (item.category || "muzqaymoq")
-  };
+function fileToCompressedDataUrl(file, maxDim = 480, quality = 0.72) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > height && width > maxDim) { height = Math.round(height * (maxDim / width)); width = maxDim; }
+        else if (height >= width && height > maxDim) { width = Math.round(width * (maxDim / height)); height = maxDim; }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.onerror = () => reject(new Error("Rasmni o'qib bo'lmadi"));
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(new Error("Faylni o'qib bo'lmadi"));
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ---------------- EDIT MODAL ---------------- */
+
+let editingItemId = null;
+let editImageDataUrl = "";
+
+function editItem(item) {
+  editingItemId = item.id;
+  editImageDataUrl = "";
+  document.getElementById("editName").value = item.name;
+  document.getElementById("editCategory").value = item.category || "muzqaymoq";
+  document.getElementById("editImageFile").value = "";
+  document.getElementById("editImagePreview").src = item.image;
+
+  const sized = item.type === "sized";
+  document.getElementById("editSimplePriceField").style.display = sized ? "none" : "block";
+  document.getElementById("editSizedFields").style.display = sized ? "block" : "none";
+  if (sized) {
+    document.getElementById("editPrice1").value = item.sizes[0].price;
+    document.getElementById("editPrice2").value = item.sizes[1].price;
+    document.getElementById("editPrice3").value = item.sizes[2].price;
+  } else {
+    document.getElementById("editPrice").value = item.price;
+  }
+  document.getElementById("editModalOverlay").classList.add("show");
+}
+
+function closeEditModal() {
+  document.getElementById("editModalOverlay").classList.remove("show");
+  editingItemId = null;
+  editImageDataUrl = "";
+}
+
+document.getElementById("editImageFile").addEventListener("change", async e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    editImageDataUrl = await fileToCompressedDataUrl(file);
+    document.getElementById("editImagePreview").src = editImageDataUrl;
+  } catch {
+    showToast("Rasmni o'qishda xatolik yuz berdi");
+  }
+});
+
+document.getElementById("editCancelBtn").addEventListener("click", closeEditModal);
+
+document.getElementById("editSaveBtn").addEventListener("click", () => {
+  if (!editingItemId) return;
+  const menu = DB.getMenu();
+  const item = menu.find(m => m.id === editingItemId);
+  if (!item) { closeEditModal(); return; }
+
+  const name = document.getElementById("editName").value.trim() || item.name;
+  const category = document.getElementById("editCategory").value;
+  const changes = { name, category, image: editImageDataUrl || item.image };
 
   if (item.type === "sized") {
-    const p1 = prompt("1L narxi:", item.sizes[0].price);
-    if (p1 === null) return;
-    const p2 = prompt("1,5L narxi:", item.sizes[1].price);
-    if (p2 === null) return;
-    const p3 = prompt("2L narxi:", item.sizes[2].price);
-    if (p3 === null) return;
+    const p1 = parseInt(document.getElementById("editPrice1").value, 10);
+    const p2 = parseInt(document.getElementById("editPrice2").value, 10);
+    const p3 = parseInt(document.getElementById("editPrice3").value, 10);
     changes.sizes = [
-      { label: "1L", price: parseInt(p1, 10) || item.sizes[0].price },
-      { label: "1,5L", price: parseInt(p2, 10) || item.sizes[1].price },
-      { label: "2L", price: parseInt(p3, 10) || item.sizes[2].price }
+      { label: "1L", price: isNaN(p1) ? item.sizes[0].price : p1 },
+      { label: "1,5L", price: isNaN(p2) ? item.sizes[1].price : p2 },
+      { label: "2L", price: isNaN(p3) ? item.sizes[2].price : p3 }
     ];
   } else {
-    const priceStr = prompt("Narxi (so'm):", item.price);
-    if (priceStr === null) return;
-    const price = parseInt(priceStr, 10);
+    const price = parseInt(document.getElementById("editPrice").value, 10);
     changes.price = isNaN(price) ? item.price : price;
   }
 
-  DB.updateMenuItem(item.id, changes);
+  try {
+    DB.updateMenuItem(item.id, changes);
+  } catch {
+    showToast("Xotira to'lib qoldi — rasm hajmi juda katta bo'lishi mumkin");
+    return;
+  }
+  closeEditModal();
   renderMenuAdmin();
-}
+  showToast("Saqlandi ✅");
+});
 
 document.getElementById("newType").addEventListener("change", () => {
   const sized = document.getElementById("newType").value === "sized";
@@ -433,24 +495,44 @@ document.getElementById("newType").addEventListener("change", () => {
   document.getElementById("size3Field").style.display = sized ? "block" : "none";
 });
 
+let newImageDataUrl = "";
+
+document.getElementById("newImageFile").addEventListener("change", async e => {
+  const file = e.target.files[0];
+  if (!file) { newImageDataUrl = ""; document.getElementById("newImagePreview").style.display = "none"; return; }
+  try {
+    newImageDataUrl = await fileToCompressedDataUrl(file);
+    const preview = document.getElementById("newImagePreview");
+    preview.src = newImageDataUrl;
+    preview.style.display = "block";
+  } catch {
+    showToast("Rasmni o'qishda xatolik yuz berdi");
+  }
+});
+
 document.getElementById("addItemBtn").addEventListener("click", () => {
   const name = document.getElementById("newName").value.trim();
   const category = document.getElementById("newCategory").value;
   const type = document.getElementById("newType").value;
-  const image = document.getElementById("newImage").value.trim() || "https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?auto=format&fit=crop&w=600&q=60";
+  const image = newImageDataUrl || "https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?auto=format&fit=crop&w=600&q=60";
 
   if (!name) { showToast("Taom nomini kiriting"); return; }
 
-  if (type === "sized") {
-    const p1 = parseInt(document.getElementById("newPrice1").value, 10);
-    const p2 = parseInt(document.getElementById("newPrice2").value, 10);
-    const p3 = parseInt(document.getElementById("newPrice3").value, 10);
-    if ([p1, p2, p3].some(p => isNaN(p) || p <= 0)) { showToast("1L, 1,5L, 2L narxlarini to'g'ri kiriting"); return; }
-    DB.addMenuItem({ name, image, category, type: "sized", sizes: [{ label: "1L", price: p1 }, { label: "1,5L", price: p2 }, { label: "2L", price: p3 }] });
-  } else {
-    const price = parseInt(document.getElementById("newPrice").value, 10);
-    if (isNaN(price) || price <= 0) { showToast("To'g'ri narx kiriting"); return; }
-    DB.addMenuItem({ name, image, category, type: "simple", price });
+  try {
+    if (type === "sized") {
+      const p1 = parseInt(document.getElementById("newPrice1").value, 10);
+      const p2 = parseInt(document.getElementById("newPrice2").value, 10);
+      const p3 = parseInt(document.getElementById("newPrice3").value, 10);
+      if ([p1, p2, p3].some(p => isNaN(p) || p <= 0)) { showToast("1L, 1,5L, 2L narxlarini to'g'ri kiriting"); return; }
+      DB.addMenuItem({ name, image, category, type: "sized", sizes: [{ label: "1L", price: p1 }, { label: "1,5L", price: p2 }, { label: "2L", price: p3 }] });
+    } else {
+      const price = parseInt(document.getElementById("newPrice").value, 10);
+      if (isNaN(price) || price <= 0) { showToast("To'g'ri narx kiriting"); return; }
+      DB.addMenuItem({ name, image, category, type: "simple", price });
+    }
+  } catch {
+    showToast("Xotira to'lib qoldi — rasm hajmi juda katta bo'lishi mumkin");
+    return;
   }
 
   document.getElementById("newName").value = "";
@@ -458,7 +540,9 @@ document.getElementById("addItemBtn").addEventListener("click", () => {
   document.getElementById("newPrice1").value = "";
   document.getElementById("newPrice2").value = "";
   document.getElementById("newPrice3").value = "";
-  document.getElementById("newImage").value = "";
+  document.getElementById("newImageFile").value = "";
+  document.getElementById("newImagePreview").style.display = "none";
+  newImageDataUrl = "";
   renderMenuAdmin();
   showToast("Taom qo'shildi ✅");
 });
