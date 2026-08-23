@@ -1,12 +1,12 @@
 /* ============ DATA ============ */
-let products = [  
+let products = [
   {id:'p1',cat:'ice',name:'Qaymoqli klassik',price:15000,icon:'QK',art:'art-ice',hidden:false},
   {id:'p2',cat:'ice',name:'Shokoladli premium',price:18000,icon:'SP',art:'art-ice',hidden:false},
   {id:'p3',cat:'ice',name:'Mevabop (Mix)',price:20000,icon:'MB',art:'art-ice',hidden:false},
   {id:'p4',cat:'ice',name:'Klassik Mix',price:25000,icon:'KM',art:'art-ice',hidden:false},
   {id:'p5',cat:'ice',name:'Shokolad Double',price:25000,icon:'SD',art:'art-ice',hidden:false},
   {id:'p6',cat:'ice',name:'Meva & Qaymoq',price:25000,icon:'MQ',art:'art-ice',hidden:false},
-
+ 
   {id:'p7',cat:'food',name:'Hot-dog bulichka',price:17000,icon:'HD',art:'art-food',hidden:false},
   {id:'p8',cat:'food',name:"Hot-dog bulichka (katta)",price:20000,icon:'HD',art:'art-food',hidden:false},
   {id:'p9',cat:'food',name:'Hot-dog non',price:15000,icon:'HN',art:'art-food',hidden:false},
@@ -20,7 +20,7 @@ let products = [
   {id:'p17',cat:'food',name:'Big Non Burger',price:45000,icon:'BB',art:'art-food',hidden:false},
   {id:'p18',cat:'food',name:'Haggi',price:30000,icon:'HG',art:'art-food',hidden:false},
   {id:'p19',cat:'food',name:'Haggi (katta)',price:35000,icon:'HG',art:'art-food',hidden:false},
-
+ 
   {id:'p20',cat:'drink',name:'Coca-Cola',icon:'CC',art:'art-drink',hidden:false,sizes:[{l:'1L',p:8000},{l:'1,5L',p:10000},{l:'2L',p:12000}]},
   {id:'p21',cat:'drink',name:'Fanta',icon:'FN',art:'art-drink',hidden:false,sizes:[{l:'1L',p:8000},{l:'1,5L',p:10000},{l:'2L',p:12000}]},
   {id:'p22',cat:'drink',name:'Sprite',icon:'SR',art:'art-drink',hidden:false,sizes:[{l:'1L',p:8000},{l:'1,5L',p:10000},{l:'2L',p:12000}]},
@@ -48,16 +48,16 @@ const locations = [
   {v:'orqa', l:'Orqa taraf'},
 ];
 const iconChoices = ['QK','SP','MB','KM','SD','MQ','HD','ML','LV','BL','NB','HG','CC','FN','SR','PP','HS','LP','AT','FT','TS','AE','MJ','NW'];
-
-let adminCreds = {user:'single glace', pass:'muzqaymoq2026'};
-
+ 
+let adminCreds = {user:'single glace', pass:'995787887'};
+ 
 let state = {
   view:'home', category:'ice', location:'old-out',
   cart:[], orders:[], isAdmin:false, adminTab:'orders',
   modal:null, editId:null,
 };
 let orderSeq = 0;
-
+ 
 /* ============ HELPERS ============ */
 function fmt(n){return n.toLocaleString('ru-RU').replace(/,/g,' ')+" so'm";}
 function showToast(msg){
@@ -86,7 +86,7 @@ function changeQty(key, delta){
   render();
 }
 function cartTotal(){return state.cart.reduce((s,c)=>s+c.price*c.qty,0);}
-
+ 
 /* ============ RENDER: HEADER ============ */
 function renderHeader(){
   document.getElementById('adminTagSlot').innerHTML = state.isAdmin ? '<span class="admin-tag">— Admin</span>' : '';
@@ -101,7 +101,7 @@ function renderHeader(){
 }
 function goHome(){ state.view = state.isAdmin ? 'admin' : 'home'; render(); }
 function logoutAdmin(){ state.isAdmin=false; state.view='home'; render(); }
-
+ 
 /* ============ RENDER: HOME ============ */
 function renderHome(){
   return `
@@ -116,7 +116,7 @@ function renderHome(){
     </div>
   </div>`;
 }
-
+ 
 /* ============ RENDER: MENU ============ */
 function productCard(p){
   const artClass = p.art;
@@ -208,7 +208,7 @@ function placeOrder(){
   showToast('Buyurtma qabul qilindi!');
   render();
 }
-
+ 
 /* ============ RENDER: ADMIN LOGIN ============ */
 function renderAdminLogin(){
   return `
@@ -224,7 +224,6 @@ function renderAdminLogin(){
       <div class="field">
         <label>Parol</label>
         <input id="loginPass" type="password" placeholder="Parol kiriting">
-        <div class="hint">Demo: ${adminCreds.user} / ${adminCreds.pass}</div>
       </div>
       <button class="btn-primary" style="width:100%" onclick="tryLogin()">Kirish</button>
       <a class="back-link" onclick="state.view='home';render()">← Bosh sahifaga qaytish</a>
@@ -241,7 +240,7 @@ function tryLogin(){
   }
   render();
 }
-
+ 
 /* ============ RENDER: ADMIN PANEL ============ */
 function renderAdmin(){
   let body='';
@@ -404,7 +403,7 @@ function saveSettings(){
   showToast('Sozlamalar saqlandi');
   render();
 }
-
+ 
 /* ============ MASTER RENDER ============ */
 function render(){
   renderHeader();
