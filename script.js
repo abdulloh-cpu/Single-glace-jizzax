@@ -1,363 +1,417 @@
-let ICONBG = ["#f79f1f", "#e15f41", "#8854d0", "#20bf6b", "#eb3b5a", "#0fb9b1", "#4b7bec", "#fa8231"];
+/* ============ DATA ============ */
+let products = [  
+  {id:'p1',cat:'ice',name:'Qaymoqli klassik',price:15000,icon:'QK',art:'art-ice',hidden:false},
+  {id:'p2',cat:'ice',name:'Shokoladli premium',price:18000,icon:'SP',art:'art-ice',hidden:false},
+  {id:'p3',cat:'ice',name:'Mevabop (Mix)',price:20000,icon:'MB',art:'art-ice',hidden:false},
+  {id:'p4',cat:'ice',name:'Klassik Mix',price:25000,icon:'KM',art:'art-ice',hidden:false},
+  {id:'p5',cat:'ice',name:'Shokolad Double',price:25000,icon:'SD',art:'art-ice',hidden:false},
+  {id:'p6',cat:'ice',name:'Meva & Qaymoq',price:25000,icon:'MQ',art:'art-ice',hidden:false},
 
-let menuItems = [
-  // ICE CREAM
-  { id: 1, cat: 'ice', name: 'Qaymoqli klassik', price: 15000, icon: '🍦', hidden: false },
-  { id: 2, cat: 'ice', name: 'Shokoladli premium', price: 18000, icon: '🍨', hidden: false },
-  { id: 3, cat: 'ice', name: 'Mevabop (Mix)', price: 20000, icon: '🍧', hidden: false },
-  { id: 4, cat: 'ice', name: 'Klassik Mix', price: 25000, icon: '🍦', hidden: false },
-  { id: 5, cat: 'ice', name: 'Shokolad Double', price: 25000, icon: '🍫', hidden: false },
-  { id: 6, cat: 'ice', name: 'Meva & Qaymoq', price: 25000, icon: '🍓', hidden: false },
+  {id:'p7',cat:'food',name:'Hot-dog bulichka',price:17000,icon:'HD',art:'art-food',hidden:false},
+  {id:'p8',cat:'food',name:"Hot-dog bulichka (katta)",price:20000,icon:'HD',art:'art-food',hidden:false},
+  {id:'p9',cat:'food',name:'Hot-dog non',price:15000,icon:'HN',art:'art-food',hidden:false},
+  {id:'p10',cat:'food',name:'Hot-dog non (2)',price:17000,icon:'HN',art:'art-food',hidden:false},
+  {id:'p11',cat:'food',name:'Hot-dog non (3)',price:22000,icon:'HN',art:'art-food',hidden:false},
+  {id:'p12',cat:'food',name:'Hot-dog non (4)',price:28000,icon:'HN',art:'art-food',hidden:false},
+  {id:'p13',cat:'food',name:'Mini lavash',price:30000,icon:'ML',art:'art-food',hidden:false},
+  {id:'p14',cat:'food',name:'Lavash',price:35000,icon:'LV',art:'art-food',hidden:false},
+  {id:'p15',cat:'food',name:'Big Lavash',price:40000,icon:'BL',art:'art-food',hidden:false},
+  {id:'p16',cat:'food',name:'Non Burger',price:35000,icon:'NB',art:'art-food',hidden:false},
+  {id:'p17',cat:'food',name:'Big Non Burger',price:45000,icon:'BB',art:'art-food',hidden:false},
+  {id:'p18',cat:'food',name:'Haggi',price:30000,icon:'HG',art:'art-food',hidden:false},
+  {id:'p19',cat:'food',name:'Haggi (katta)',price:35000,icon:'HG',art:'art-food',hidden:false},
 
-  // FOOD (Yeguliklar)
-  { id: 7, cat: 'food', name: 'Hot-dog bulichka', price: 17000, icon: '🌭', hidden: false },
-  { id: 8, cat: 'food', name: 'Hot-dog bulichka (katta)', price: 20000, icon: '🌭', hidden: false },
-  { id: 9, cat: 'food', name: 'Hot-dog non', price: 15000, icon: '🌭', hidden: false },
-  { id: 10, cat: 'food', name: 'Hot-dog non (2)', price: 17000, icon: '🌭', hidden: false },
-  { id: 11, cat: 'food', name: 'Hot-dog non (3)', price: 22000, icon: '🌭', hidden: false },
-  { id: 12, cat: 'food', name: 'Hot-dog non (4)', price: 28000, icon: '🌭', hidden: false },
-  { id: 13, cat: 'food', name: 'Mini lavash', price: 30000, icon: '🥙', hidden: false },
-  { id: 14, cat: 'food', name: 'Lavash', price: 35000, icon: '🥙', hidden: false },
-  { id: 15, cat: 'food', name: 'Big Lavash', price: 40000, icon: '🥙', hidden: false },
-  { id: 16, cat: 'food', name: 'Non Burger', price: 35000, icon: '🍔', hidden: false },
-  { id: 17, cat: 'food', name: 'Big Non Burger', price: 45000, icon: '🍔', hidden: false },
-  { id: 18, cat: 'food', name: 'Haggi', price: 30000, icon: '🍔', hidden: false },
-  { id: 19, cat: 'food', name: 'Haggi (katta)', price: 35000, icon: '🍔', hidden: false },
-
-  // DRINKS (Ichimliklar) — rasmsiz, ba'zilarida hajm variantlari bor
-  { id: 20, cat: 'drink', name: 'Coca-Cola', variants: { '1L': 8000, '1,5L': 10000, '2L': 12000 }, hidden: false },
-  { id: 21, cat: 'drink', name: 'Fanta', variants: { '1L': 8000, '1,5L': 10000, '2L': 12000 }, hidden: false },
-  { id: 22, cat: 'drink', name: 'Sprite', variants: { '1L': 8000, '1,5L': 10000, '2L': 12000 }, hidden: false },
-  { id: 23, cat: 'drink', name: 'Pepsi', variants: { '1L': 8000, '1,5L': 10000, '2L': 12000 }, hidden: false },
-  { id: 24, cat: 'drink', name: 'Coca-Cola (banka)', price: 6000, hidden: false },
-  { id: 25, cat: 'drink', name: 'Pepsi (banka)', price: 6000, hidden: false },
-  { id: 26, cat: 'drink', name: 'Hydrolik suv', variants: { '1L': 5000, '1,5L': 6000, '2L': 7000 }, hidden: false },
-  { id: 27, cat: 'drink', name: 'Lipton (muzli choy)', variants: { '1L': 9000, '1,5L': 11000, '2L': 13000 }, hidden: false },
-  { id: 28, cat: 'drink', name: 'Ays Tea', variants: { '1L': 9000, '1,5L': 11000, '2L': 13000 }, hidden: false },
-  { id: 29, cat: 'drink', name: 'Fuse Tea', variants: { '1L': 9000, '1,5L': 11000, '2L': 13000 }, hidden: false },
-  { id: 30, cat: 'drink', name: 'Tropic sharbat', price: 12000, hidden: false },
-  { id: 31, cat: 'drink', name: 'Dena sharbat (aralash mevali)', price: 10000, hidden: false },
-  { id: 32, cat: 'drink', name: 'Dinay sharbat (aralash mevali)', price: 10000, hidden: false },
-  { id: 33, cat: 'drink', name: 'Adrenaline Energy (banka)', price: 15000, hidden: false },
-  { id: 34, cat: 'drink', name: 'Flash Energy (banka)', price: 15000, hidden: false },
-  { id: 35, cat: 'drink', name: 'Mojito (banka)', price: 12000, hidden: false },
-  { id: 36, cat: 'drink', name: 'Coca-Cola tara (shisha)', price: 12000, hidden: false },
-  { id: 37, cat: 'drink', name: 'Fanta tara (shisha)', price: 12000, hidden: false },
-  { id: 38, cat: 'drink', name: 'Sprite tara (shisha)', price: 12000, hidden: false },
+  {id:'p20',cat:'drink',name:'Coca-Cola',icon:'CC',art:'art-drink',hidden:false,sizes:[{l:'1L',p:8000},{l:'1,5L',p:10000},{l:'2L',p:12000}]},
+  {id:'p21',cat:'drink',name:'Fanta',icon:'FN',art:'art-drink',hidden:false,sizes:[{l:'1L',p:8000},{l:'1,5L',p:10000},{l:'2L',p:12000}]},
+  {id:'p22',cat:'drink',name:'Sprite',icon:'SR',art:'art-drink',hidden:false,sizes:[{l:'1L',p:8000},{l:'1,5L',p:10000},{l:'2L',p:12000}]},
+  {id:'p23',cat:'drink',name:'Pepsi',icon:'PP',art:'art-drink',hidden:false,sizes:[{l:'1L',p:8000},{l:'1,5L',p:10000},{l:'2L',p:12000}]},
+  {id:'p24',cat:'drink',name:'Coca-Cola (banka)',price:6000,icon:'CC',art:'art-drink',hidden:false},
+  {id:'p25',cat:'drink',name:'Pepsi (banka)',price:6000,icon:'PP',art:'art-drink',hidden:false},
+  {id:'p26',cat:'drink',name:'Hydrolik suv',icon:'HS',art:'art-drink',hidden:false,sizes:[{l:'1L',p:5000},{l:'1,5L',p:6000},{l:'2L',p:7000}]},
+  {id:'p27',cat:'drink',name:'Lipton (muzli choy)',icon:'LP',art:'art-drink',hidden:false,sizes:[{l:'1L',p:9000},{l:'1,5L',p:11000},{l:'2L',p:13000}]},
+  {id:'p28',cat:'drink',name:'Ays Tea',icon:'AT',art:'art-drink',hidden:false,sizes:[{l:'1L',p:9000},{l:'1,5L',p:11000},{l:'2L',p:13000}]},
+  {id:'p29',cat:'drink',name:'Fuse Tea',icon:'FT',art:'art-drink',hidden:false,sizes:[{l:'1L',p:9000},{l:'1,5L',p:11000},{l:'2L',p:13000}]},
+  {id:'p30',cat:'drink',name:'Tropic sharbat',price:12000,icon:'TS',art:'art-drink',hidden:false},
+  {id:'p31',cat:'drink',name:'Dena sharbat (aralash mevali)',price:10000,icon:'DN',art:'art-drink',hidden:false},
+  {id:'p32',cat:'drink',name:'Dinay sharbat (aralash mevali)',price:10000,icon:'DY',art:'art-drink',hidden:false},
+  {id:'p33',cat:'drink',name:'Adrenaline Energy (banka)',price:15000,icon:'AE',art:'art-drink',hidden:false},
+  {id:'p34',cat:'drink',name:'Flash Energy (banka)',price:15000,icon:'FE',art:'art-drink',hidden:false},
+  {id:'p35',cat:'drink',name:'Mojito (banka)',price:12000,icon:'MJ',art:'art-drink',hidden:false},
+  {id:'p36',cat:'drink',name:'Coca-Cola tara (shisha)',price:12000,icon:'CC',art:'art-drink',hidden:false},
+  {id:'p37',cat:'drink',name:'Fanta tara (shisha)',price:12000,icon:'FN',art:'art-drink',hidden:false},
+  {id:'p38',cat:'drink',name:'Sprite tara (shisha)',price:12000,icon:'SR',art:'art-drink',hidden:false},
 ];
-let nextId = 39;
-
-let categories = [
-  { key: 'ice', label: '🍦 Muzqaymoq' },
-  { key: 'food', label: '🍪 Yeguliklar' },
-  { key: 'drink', label: '🥤 Ichimliklar' },
+const catLabel = {ice:'Muzqaymoq', food:'Yeguliklar', drink:'Ichimliklar'};
+const locations = [
+  {v:'old-out', l:'Old taraf (Tashqari)'},
+  {v:'old-in', l:'Old taraf (Ichkari)'},
+  {v:'orqa', l:'Orqa taraf'},
 ];
+const iconChoices = ['QK','SP','MB','KM','SD','MQ','HD','ML','LV','BL','NB','HG','CC','FN','SR','PP','HS','LP','AT','FT','TS','AE','MJ','NW'];
 
-let admin = { nick: 'admin', pass: 'admin123' };
-let isLoggedIn = false;
+let adminCreds = {user:'single glace', pass:'muzqaymoq2026'};
 
-let orders = []; // {id, table, location, items:[{name,price,qty}], total, status, time}
-let nextOrderId = 1;
+let state = {
+  view:'home', category:'ice', location:'old-out',
+  cart:[], orders:[], isAdmin:false, adminTab:'orders',
+  modal:null, editId:null,
+};
+let orderSeq = 0;
 
-let cart = []; // {key, name, price, qty}
-let currentCat = 'ice';
-let editingItemId = null;
-
-/* ======================= NAV ======================= */
-function hideAll() {
-  ['view-home', 'view-menu', 'view-admin-login', 'view-admin'].forEach(id => {
-    document.getElementById(id).classList.add('hidden');
-  });
+/* ============ HELPERS ============ */
+function fmt(n){return n.toLocaleString('ru-RU').replace(/,/g,' ')+" so'm";}
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
 }
-function renderHeader() {
-  const right = document.getElementById('headerRight');
-  const tag = document.getElementById('adminTag');
-  if (isLoggedIn) {
-    tag.textContent = ' — Admin';
-    right.innerHTML = `<button onclick="goHome()">🏠 Bosh sahifa</button><button class="dark" onclick="logout()">Chiqish</button>`;
+function cartKey(pid,size){return pid+'::'+(size||'base');}
+function addToCart(pid, size, price, label){
+  const key = cartKey(pid,size);
+  const existing = state.cart.find(c=>c.key===key);
+  if(existing){ existing.qty++; }
+  else {
+    const p = products.find(x=>x.id===pid);
+    state.cart.push({key, pid, name:p.name + (size?` (${size})`:''), price, qty:1});
+  }
+  showToast('Savatga qo\'shildi');
+  render();
+}
+function changeQty(key, delta){
+  const item = state.cart.find(c=>c.key===key);
+  if(!item) return;
+  item.qty += delta;
+  if(item.qty<=0) state.cart = state.cart.filter(c=>c.key!==key);
+  render();
+}
+function cartTotal(){return state.cart.reduce((s,c)=>s+c.price*c.qty,0);}
+
+/* ============ RENDER: HEADER ============ */
+function renderHeader(){
+  document.getElementById('adminTagSlot').innerHTML = state.isAdmin ? '<span class="admin-tag">— Admin</span>' : '';
+  const pills = document.getElementById('headerPills');
+  let html = `<a class="pill" onclick="goHome()">Bosh sahifa</a>`;
+  if(state.isAdmin){
+    html += `<a class="pill dark" onclick="logoutAdmin()">Chiqish</a>`;
   } else {
-    tag.textContent = '';
-    right.innerHTML = `<button onclick="goHome()">🏠 Bosh sahifa</button><button onclick="goMenu()">Stol: #01</button>`;
+    html += `<span class="pill">Stol: #01</span>`;
   }
+  pills.innerHTML = html;
 }
-function goHome() { hideAll(); document.getElementById('view-home').classList.remove('hidden'); renderHeader(); }
-function goMenu() { hideAll(); document.getElementById('view-menu').classList.remove('hidden'); renderHeader(); renderCatTabs(); renderProducts(); renderCart(); }
-function goAdminLogin() {
-  hideAll(); document.getElementById('view-admin-login').classList.remove('hidden'); renderHeader();
-  document.getElementById('hintNick').textContent = admin.nick;
-  document.getElementById('hintPass').textContent = admin.pass;
-}
-function logout() { isLoggedIn = false; goHome(); }
+function goHome(){ state.view = state.isAdmin ? 'admin' : 'home'; render(); }
+function logoutAdmin(){ state.isAdmin=false; state.view='home'; render(); }
 
-/* ======================= CUSTOMER MENU ======================= */
-function renderCatTabs() {
-  const box = document.getElementById('catTabs');
-  box.innerHTML = categories.map(c => `
-    <button class="${c.key === currentCat ? 'active' : ''}" onclick="setCat('${c.key}')">${c.label}</button>
-  `).join('');
-}
-function setCat(key) { currentCat = key; renderCatTabs(); renderProducts(); }
-
-function renderProducts() {
-  const box = document.getElementById('products');
-  const items = menuItems.filter(i => i.cat === currentCat && !i.hidden);
-  box.innerHTML = items.map(item => {
-    const showImg = false;
-    const imgHtml = showImg ? `<div class="img" style="background:${bgFor(item.id)}">${item.icon || '🍽️'}</div>` : '';
-    if (item.variants) {
-      const keys = Object.keys(item.variants);
-      const volBtns = keys.map((v, i) => `
-        <button class="vol-btn ${i === 0 ? 'selected' : ''}" data-vol="${v}" data-price="${item.variants[v]}" onclick="selectVol(this)">
-          ${v}<span class="price">${fmt(item.variants[v])}</span>
-        </button>`).join('');
-      return `
-        <div class="card">
-          ${imgHtml}
-          <div class="body">
-            <h3>${item.name}</h3>
-            <div class="hint">Hajmni tanlang:</div>
-            <div class="vol-row" data-item="${item.id}">${volBtns}</div>
-            <button class="add-btn" onclick="addVariantToCart(${item.id})">+ Qo'shish</button>
-          </div>
-        </div>`;
-    } else {
-      return `
-        <div class="card">
-          ${imgHtml}
-          <div class="body">
-            <h3>${item.name}</h3>
-            <div class="price-single">${fmt(item.price)}</div>
-            <button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">+ Qo'shish</button>
-          </div>
-        </div>`;
-    }
-  }).join('') || `<div style="color:#888;padding:20px;">Bu bo'limda hozircha mahsulot yo'q.</div>`;
-}
-function bgFor(id) { return ICONBG[id % ICONBG.length]; }
-function selectVol(btn) {
-  const row = btn.parentElement;
-  row.querySelectorAll('.vol-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-}
-function addVariantToCart(itemId) {
-  const row = document.querySelector(`.vol-row[data-item="${itemId}"]`);
-  const sel = row.querySelector('.vol-btn.selected');
-  const item = menuItems.find(i => i.id === itemId);
-  addToCart(`${item.name} (${sel.dataset.vol})`, Number(sel.dataset.price));
-}
-function addToCart(name, price) {
-  const existing = cart.find(c => c.name === name);
-  if (existing) { existing.qty++; } else { cart.push({ name, price, qty: 1 }); }
-  renderCart();
-  showToast(`${name} savatga qo'shildi`);
-}
-function changeQty(name, delta) {
-  const it = cart.find(c => c.name === name);
-  if (!it) return;
-  it.qty += delta;
-  if (it.qty <= 0) cart = cart.filter(c => c.name !== name);
-  renderCart();
-}
-function renderCart() {
-  const box = document.getElementById('cartItems');
-  const totalEl = document.getElementById('totalPrice');
-  if (cart.length === 0) {
-    box.innerHTML = `<div class="empty">Savatingiz bo'sh</div>`;
-    totalEl.textContent = '0 so\'m';
-    return;
-  }
-  box.innerHTML = cart.map(c => `
-    <div class="cart-item">
-      <span>${c.name}</span>
-      <div class="qty-ctrl">
-        <button onclick="changeQty('${c.name.replace(/'/g, "\\'")}',-1)">−</button>
-        <span>${c.qty}</span>
-        <button onclick="changeQty('${c.name.replace(/'/g, "\\'")}',1)">+</button>
+/* ============ RENDER: HOME ============ */
+function renderHome(){
+  return `
+  <div class="page">
+    <div class="home-hero">
+      <h1>SINGLE ICECREAM</h1>
+      <p>Tezkor va mazali buyurtma berish xizmati</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="state.view='menu';render()">Menyuga o'tish</button>
+        <button class="btn-secondary" onclick="state.view='admin-login';render()">Admin panel</button>
       </div>
-      <span>${fmt(c.price * c.qty)}</span>
-    </div>`).join('');
-  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
-  totalEl.textContent = fmt(total);
-}
-function placeOrder() {
-  if (cart.length === 0) { showToast("Savat bo'sh — avval mahsulot qo'shing"); return; }
-  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
-  orders.unshift({
-    id: nextOrderId++,
-    table: 'Stol #01',
-    location: document.getElementById('locationSelect').value,
-    items: cart.map(c => ({ name: c.name, price: c.price, qty: c.qty })),
-    total,
-    status: 'Kutilmoqda',
-    time: new Date()
-  });
-  cart = [];
-  renderCart();
-  showToast("Buyurtma qabul qilindi! Rahmat 🎉");
+    </div>
+  </div>`;
 }
 
-/* ======================= ADMIN LOGIN ======================= */
-function tryLogin() {
-  const nick = document.getElementById('loginNick').value.trim();
-  const pass = document.getElementById('loginPass').value.trim();
-  if (nick === admin.nick && pass === admin.pass) {
-    isLoggedIn = true;
-    goAdminDashboard();
-  } else {
-    showToast("Login yoki parol noto'g'ri");
-  }
-}
-function goAdminDashboard() {
-  hideAll();
-  document.getElementById('view-admin').classList.remove('hidden');
-  renderHeader();
-  switchAdminTab('orders');
-}
-function switchAdminTab(tab) {
-  ['Orders', 'Menu', 'Settings'].forEach(t => {
-    document.getElementById('admin' + t).classList.add('hidden');
-    document.getElementById('tab' + t).classList.remove('active');
-  });
-  const map = { orders: 'Orders', menu: 'Menu', settings: 'Settings' };
-  document.getElementById('admin' + map[tab]).classList.remove('hidden');
-  document.getElementById('tab' + map[tab]).classList.add('active');
-  if (tab === 'orders') renderOrders();
-  if (tab === 'menu') renderAdminGrid();
-}
-
-/* ======================= ADMIN: ORDERS ======================= */
-function renderOrders() {
-  const box = document.getElementById('ordersList');
-  if (orders.length === 0) {
-    box.innerHTML = `<div style="color:#888;">Hozircha buyurtmalar yo'q.</div>`;
-    return;
-  }
-  box.innerHTML = orders.map(o => {
-    const badgeClass = o.status === 'Tayyor' ? '' : (o.status === 'Bekor qilindi' ? 'cancelled' : 'pending');
-    const lines = o.items.map(it => `<div><span>${it.name} x${it.qty}</span><span>${fmt(it.price * it.qty)}</span></div>`).join('');
+/* ============ RENDER: MENU ============ */
+function productCard(p){
+  const artClass = p.art;
+  if(p.sizes){
+    const sel = state._sizeSel && state._sizeSel[p.id] || p.sizes[0].l;
+    const selObj = p.sizes.find(s=>s.l===sel);
     return `
-    <div class="order-card">
-      <div class="top">
-        <div>
-          <b>${o.table} · ${o.location}</b><br>
-          <span class="time">${o.time.toLocaleString('uz-UZ')}</span>
-        </div>
-        <span class="status-badge ${badgeClass}">${o.status.toUpperCase()}</span>
+    <div class="product-card">
+      <div class="product-name">${p.name}</div>
+      <div class="product-price">Hajmni tanlang:</div>
+      <div class="size-row">
+        ${p.sizes.map(s=>`<div class="size-btn ${s.l===sel?'active':''}" onclick="selectSize('${p.id}','${s.l}')">${s.l}<br>${s.p.toLocaleString('ru-RU').replace(/,/g,' ')}</div>`).join('')}
       </div>
-      <div class="order-lines">${lines}</div>
-      <div class="order-bottom">
-        <b>Jami: ${fmt(o.total)}</b>
-        <select onchange="updateOrderStatus(${o.id}, this.value)">
-          ${['Kutilmoqda', 'Tayyorlanmoqda', 'Tayyor', 'Bekor qilindi'].map(s => `<option ${s === o.status ? 'selected' : ''}>${s}</option>`).join('')}
+      <button class="add-btn" onclick="addToCart('${p.id}','${sel}',${selObj.p})">Qo'shish</button>
+    </div>`;
+  }
+  return `
+  <div class="product-card">
+    <div class="product-name">${p.name}</div>
+    <div class="product-price">${fmt(p.price)}</div>
+    <button class="add-btn" onclick="addToCart('${p.id}',null,${p.price})">Qo'shish</button>
+  </div>`;
+}
+function selectSize(pid,l){
+  state._sizeSel = state._sizeSel || {};
+  state._sizeSel[pid] = l;
+  render();
+}
+function renderCartPanel(){
+  const items = state.cart;
+  let body = items.length===0
+    ? `<div class="cart-empty">Savatingiz bo'sh</div>`
+    : items.map(c=>`
+      <div class="cart-item">
+        <div>
+          <div class="cart-item-name">${c.name}</div>
+          <div class="cart-item-meta">${fmt(c.price)} x ${c.qty}</div>
+          <div class="qty-controls">
+            <div class="qty-btn" onclick="changeQty('${c.key}',-1)">−</div>
+            <div class="qty-num">${c.qty}</div>
+            <div class="qty-btn" onclick="changeQty('${c.key}',1)">+</div>
+          </div>
+        </div>
+        <div class="remove-x" onclick="changeQty('${c.key}',-999)">✕</div>
+      </div>`).join('');
+  return `
+  <div class="cart-panel">
+    <h3>Buyurtmangiz</h3>
+    ${body}
+    <div class="cart-total-row"><span>Jami:</span><span>${fmt(cartTotal())}</span></div>
+    <button class="checkout-btn" ${items.length===0?'disabled':''} onclick="placeOrder()">Buyurtma berish</button>
+  </div>`;
+}
+function renderMenu(){
+  const list = products.filter(p=>p.cat===state.category && !p.hidden);
+  return `
+  <div class="page">
+    <div class="center-title">
+      <h1>Muzqaymoq buyurtma qiling</h1>
+      <p>Tezkor va mazali buyurtma berish xizmati</p>
+    </div>
+    <div class="menu-topbar">
+      <div class="location-select">Joylashuv:
+        <select onchange="state.location=this.value">
+          ${locations.map(l=>`<option value="${l.v}" ${l.v===state.location?'selected':''}>${l.l}</option>`).join('')}
         </select>
       </div>
-    </div>`;
-  }).join('');
+      <div class="cat-tabs">
+        ${Object.keys(catLabel).map(c=>`<div class="cat-tab ${c===state.category?'active':''}" onclick="state.category='${c}';render()">${catLabel[c]}</div>`).join('')}
+      </div>
+    </div>
+    <div class="menu-layout">
+      <div class="product-grid">${list.map(productCard).join('') || `<div class="empty-note">Bu bo'limda hozircha mahsulot yo'q</div>`}</div>
+      ${renderCartPanel()}
+    </div>
+  </div>`;
 }
-function updateOrderStatus(id, status) {
-  const o = orders.find(o => o.id === id);
-  if (o) { o.status = status; renderOrders(); }
+function placeOrder(){
+  if(state.cart.length===0) return;
+  orderSeq++;
+  const now = new Date();
+  const dateStr = now.toISOString().slice(0,10)+' '+now.toTimeString().slice(0,8);
+  state.orders.unshift({
+    id:orderSeq, table:'01', location: locations.find(l=>l.v===state.location).l,
+    items: state.cart.map(c=>({name:c.name, qty:c.qty, sum:c.price*c.qty})),
+    total: cartTotal(), status:'Kutilmoqda', date:dateStr,
+  });
+  state.cart = [];
+  showToast('Buyurtma qabul qilindi!');
+  render();
 }
 
-/* ======================= ADMIN: MENU ======================= */
-function renderAdminGrid() {
-  const box = document.getElementById('adminGrid');
-  box.innerHTML = menuItems.map(item => {
-    const priceLabel = item.variants
-      ? Object.entries(item.variants).map(([k, v]) => `${k}: ${fmt(v)}`).join(' / ')
-      : fmt(item.price);
-    const showImg = false;
-    const imgHtml = showImg ? `<div class="img" style="background:${bgFor(item.id)}">${item.icon || '🍽️'}</div>` : '';
-    return `
-    <div class="admin-card ${item.hidden ? 'hidden-item' : ''}">
-      ${imgHtml}
-      <div class="body">
-        <div class="cat">${catLabel(item.cat)}</div>
-        <h4>${item.name}</h4>
-        <div class="price">${priceLabel}</div>
-        <div class="btn-row">
-          <button class="btn-edit" onclick="openItemModal(${item.id})">Tahrirlash</button>
-          <button class="btn-hide" onclick="toggleHide(${item.id})">${item.hidden ? "Ko'rsatish" : 'Yashirish'}</button>
-          <button class="btn-del" onclick="deleteItem(${item.id})">O'chirish</button>
+/* ============ RENDER: ADMIN LOGIN ============ */
+function renderAdminLogin(){
+  return `
+  <div class="page">
+    <div class="login-card">
+      <h2>Admin panel</h2>
+      <p>SINGLE ICECREAM boshqaruvi</p>
+      ${state._loginError?`<div class="login-error">${state._loginError}</div>`:''}
+      <div class="field">
+        <label>Nik name</label>
+        <input id="loginUser" type="text" placeholder="Nik name kiriting">
+      </div>
+      <div class="field">
+        <label>Parol</label>
+        <input id="loginPass" type="password" placeholder="Parol kiriting">
+        <div class="hint">Demo: ${adminCreds.user} / ${adminCreds.pass}</div>
+      </div>
+      <button class="btn-primary" style="width:100%" onclick="tryLogin()">Kirish</button>
+      <a class="back-link" onclick="state.view='home';render()">← Bosh sahifaga qaytish</a>
+    </div>
+  </div>`;
+}
+function tryLogin(){
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value.trim();
+  if(u===adminCreds.user && p===adminCreds.pass){
+    state.isAdmin = true; state.view='admin'; state.adminTab='orders'; state._loginError=null;
+  } else {
+    state._loginError = "Nik name yoki parol noto'g'ri";
+  }
+  render();
+}
+
+/* ============ RENDER: ADMIN PANEL ============ */
+function renderAdmin(){
+  let body='';
+  if(state.adminTab==='orders') body = renderOrdersTab();
+  else if(state.adminTab==='menu') body = renderMenuTab();
+  else body = renderSettingsTab();
+  return `
+  <div class="page">
+    <div class="admin-tabs">
+      <div class="admin-tab ${state.adminTab==='orders'?'active':''}" onclick="state.adminTab='orders';render()">Buyurtmalar</div>
+      <div class="admin-tab ${state.adminTab==='menu'?'active':''}" onclick="state.adminTab='menu';render()">Menyu</div>
+      <div class="admin-tab ${state.adminTab==='settings'?'active':''}" onclick="state.adminTab='settings';render()">Sozlamalar</div>
+    </div>
+    ${body}
+  </div>`;
+}
+function renderOrdersTab(){
+  const statuses = ['Kutilmoqda','Tayyorlanmoqda','Tayyor','Bekor qilindi'];
+  const list = state.orders;
+  return `
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+    <h2 class="admin-section-title">Buyurtmalar</h2>
+    <div class="hint">Har 3 soniyada avtomatik yangilanadi</div>
+  </div>
+  ${list.length===0?`<div class="empty-note">Hozircha buyurtmalar yo'q</div>`:
+  list.map(o=>`
+    <div class="order-card">
+      <div class="order-top">
+        <div>
+          <div class="order-title">Stol #${o.table} · ${o.location}</div>
+          <div class="order-date">${o.date}</div>
+        </div>
+        <div class="status-badge status-${o.status==='Bekor qilindi'?'Bekor':o.status}">${o.status.toUpperCase()}</div>
+      </div>
+      <div class="order-items">
+        ${o.items.map(it=>`<div><span>${it.name} x${it.qty}</span><span>${fmt(it.sum)}</span></div>`).join('')}
+      </div>
+      <div class="order-bottom">
+        <div class="order-total">Jami: ${fmt(o.total)}</div>
+        <select class="status-select" onchange="setOrderStatus(${o.id}, this.value)">
+          ${statuses.map(s=>`<option value="${s}" ${s===o.status?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </div>
+    </div>`).join('')}
+  `;
+}
+function setOrderStatus(id, status){
+  const o = state.orders.find(x=>x.id===id);
+  if(o) o.status = status;
+  render();
+}
+function renderMenuTab(){
+  return `
+  <h2 class="admin-section-title">Menyu boshqaruvi</h2>
+  <button class="add-product-btn" onclick="openProductModal(null)">+ Yangi mahsulot</button>
+  <div class="menu-admin-grid">
+    ${products.map(p=>`
+    <div class="menu-admin-card ${p.hidden?'hidden-item':''}">
+      <div class="cat-label">${catLabel[p.cat]}</div>
+      <div class="ma-name">${p.name}</div>
+      <div class="ma-price">${p.sizes ? p.sizes.map(s=>`${s.l}: ${fmt(s.p)}`).join(' / ') : fmt(p.price)}</div>
+      <div class="ma-actions">
+        <div class="ma-btn ma-edit" onclick="openProductModal('${p.id}')">Tahrirlash</div>
+        <div class="ma-btn ma-hide" onclick="toggleHide('${p.id}')">${p.hidden?"Ko'rsatish":'Yashirish'}</div>
+        <div class="ma-btn ma-del" onclick="deleteProduct('${p.id}')">O'chirish</div>
+      </div>
+    </div>`).join('')}
+  </div>
+  ${state.modal==='product' ? productModal() : ''}
+  `;
+}
+function toggleHide(id){
+  const p = products.find(x=>x.id===id);
+  p.hidden = !p.hidden;
+  render();
+}
+function deleteProduct(id){
+  if(!confirm("Bu mahsulotni o'chirmoqchimisiz?")) return;
+  products = products.filter(x=>x.id!==id);
+  render();
+}
+function openProductModal(id){
+  state.modal='product';
+  state.editId=id;
+  state._iconSel = id ? products.find(p=>p.id===id).icon : 'NW';
+  render();
+}
+function closeModal(){ state.modal=null; state.editId=null; render(); }
+function productModal(){
+  const editing = state.editId ? products.find(p=>p.id===state.editId) : null;
+  return `
+  <div class="overlay" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <h3>${editing?'Mahsulotni tahrirlash':"Yangi mahsulot qo'shish"}</h3>
+      <div class="field">
+        <label>Nomi</label>
+        <input id="pmName" type="text" value="${editing?editing.name:''}" placeholder="Masalan: Qaymoqli klassik">
+      </div>
+      <div class="field">
+        <label>Kategoriya</label>
+        <select id="pmCat">
+          ${Object.keys(catLabel).map(c=>`<option value="${c}" ${editing&&editing.cat===c?'selected':''}>${catLabel[c]}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field">
+        <label>Narxi (so'm)</label>
+        <input id="pmPrice" type="number" value="${editing&&!editing.sizes?editing.price:''}" placeholder="15000">
+      </div>
+      <div class="field">
+        <label>Belgi (icon)</label>
+        <div class="icon-choice-row">
+          ${iconChoices.map(ic=>`<div class="icon-choice ${state._iconSel===ic?'active':''}" onclick="state._iconSel='${ic}';render()">${ic}</div>`).join('')}
         </div>
       </div>
-    </div>`;
-  }).join('');
+      <div class="modal-actions">
+        <button class="modal-cancel" onclick="closeModal()">Bekor qilish</button>
+        <button class="modal-save" onclick="saveProduct()">Saqlash</button>
+      </div>
+    </div>
+  </div>`;
 }
-function catLabel(cat) {
-  return cat === 'ice' ? 'Muzqaymoq' : cat === 'food' ? 'Yeguliklar' : 'Ichimliklar';
-}
-function toggleHide(id) {
-  const it = menuItems.find(i => i.id === id);
-  it.hidden = !it.hidden;
-  renderAdminGrid();
-}
-function deleteItem(id) {
-  if (!confirm("Bu mahsulotni o'chirishni tasdiqlaysizmi?")) return;
-  menuItems = menuItems.filter(i => i.id !== id);
-  renderAdminGrid();
-}
-function openItemModal(id) {
-  editingItemId = id;
-  document.getElementById('itemModalBg').classList.remove('hidden');
-  if (id) {
-    const it = menuItems.find(i => i.id === id);
-    document.getElementById('modalTitle').textContent = 'Mahsulotni tahrirlash';
-    document.getElementById('mName').value = it.name;
-    document.getElementById('mCat').value = it.cat;
-    document.getElementById('mPrice').value = it.variants ? '' : it.price;
-    document.getElementById('mIcon').value = it.icon || '';
+function saveProduct(){
+  const name = document.getElementById('pmName').value.trim();
+  const cat = document.getElementById('pmCat').value;
+  const price = parseInt(document.getElementById('pmPrice').value)||0;
+  if(!name || !price){ showToast("Nomi va narxini to'ldiring"); return; }
+  const artMap = {ice:'art-ice',food:'art-food',drink:'art-drink'};
+  if(state.editId){
+    const p = products.find(x=>x.id===state.editId);
+    p.name=name; p.cat=cat; p.price=price; p.icon=state._iconSel; p.art=artMap[cat];
+    delete p.sizes;
   } else {
-    document.getElementById('modalTitle').textContent = 'Yangi mahsulot qo\'shish';
-    document.getElementById('mName').value = '';
-    document.getElementById('mCat').value = currentCat === 'drink' ? 'drink' : 'ice';
-    document.getElementById('mPrice').value = '';
-    document.getElementById('mIcon').value = '🍦';
+    products.push({id:'p'+Date.now(), cat, name, price, icon:state._iconSel, art:artMap[cat], hidden:false});
   }
+  showToast('Saqlandi');
+  closeModal();
 }
-function closeItemModal() { document.getElementById('itemModalBg').classList.add('hidden'); editingItemId = null; }
-function saveItem() {
-  const name = document.getElementById('mName').value.trim();
-  const cat = document.getElementById('mCat').value.trim() || 'ice';
-  const price = Number(document.getElementById('mPrice').value) || 0;
-  const icon = document.getElementById('mIcon').value.trim() || '🍽️';
-  if (!name) { showToast("Nomini kiriting"); return; }
-
-  if (editingItemId) {
-    const it = menuItems.find(i => i.id === editingItemId);
-    it.name = name; it.cat = cat; it.icon = icon;
-    if (it.variants) {
-      // variantli mahsulotning umumiy narxini o'zgartirmaymiz, faqat nomi/kategoriyasi
-    } else {
-      it.price = price;
-    }
-  } else {
-    menuItems.push({ id: nextId++, cat, name, price, icon, hidden: false });
-  }
-  closeItemModal();
-  renderAdminGrid();
+function renderSettingsTab(){
+  return `
+  <h2 class="admin-section-title">Nik name / parolni o'zgartirish</h2>
+  <div class="settings-card">
+    <div class="settings-grid">
+      <div class="field">
+        <label>Yangi nik name</label>
+        <input id="newUser" type="text" placeholder="${adminCreds.user}">
+      </div>
+      <div class="field">
+        <label>Yangi parol</label>
+        <input id="newPass" type="password" placeholder="••••••••">
+      </div>
+    </div>
+    <button class="save-btn" onclick="saveSettings()">Saqlash</button>
+  </div>`;
 }
-
-/* ======================= ADMIN: SETTINGS ======================= */
-function saveSettings() {
-  const nick = document.getElementById('newNick').value.trim();
-  const pass = document.getElementById('newPass').value.trim();
-  if (nick) admin.nick = nick;
-  if (pass) admin.pass = pass;
-  document.getElementById('newNick').value = '';
-  document.getElementById('newPass').value = '';
-  showToast("Sozlamalar saqlandi");
+function saveSettings(){
+  const u = document.getElementById('newUser').value.trim();
+  const p = document.getElementById('newPass').value.trim();
+  if(u) adminCreds.user = u;
+  if(p) adminCreds.pass = p;
+  showToast('Sozlamalar saqlandi');
+  render();
 }
 
-/* ======================= UTIL ======================= */
-function fmt(n) { return n.toLocaleString('ru-RU') + " so'm"; }
-function showToast(msg) {
-  const t = document.createElement('div');
-  t.className = 'toast';
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 2200);
+/* ============ MASTER RENDER ============ */
+function render(){
+  renderHeader();
+  const app = document.getElementById('app');
+  if(state.view==='home') app.innerHTML = renderHome();
+  else if(state.view==='menu') app.innerHTML = renderMenu();
+  else if(state.view==='admin-login') app.innerHTML = renderAdminLogin();
+  else if(state.view==='admin') app.innerHTML = renderAdmin();
 }
-
-/* init */
-goHome();
+render();
