@@ -1,45 +1,6 @@
-const firebaseConfig = {
-  apiKey: "AIzaSyD75WGH4sVwTrC8Y6BgPLKg7GpObMjSAGY",
-  authDomain: "ice-cream-bceb2.firebaseapp.com",
-  databaseURL: "https://ice-cream-bceb2-default-rtdb.firebaseio.com",
-  projectId: "ice-cream-bceb2",
-  storageBucket: "ice-cream-bceb2.firebasestorage.app",
-  messagingSenderId: "212188278895",
-  appId: "1:212188278895:web:1492d327f91d9d321cdd9a",
-  measurementId: "G-YEWCJ0LF2L"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
 let ICONBG = ["#f79f1f", "#e15f41", "#8854d0", "#20bf6b", "#eb3b5a", "#0fb9b1", "#4b7bec", "#fa8231"];
-let menuItems = [];
-let nextId = 1;
 
-let categories = [
-  { key: 'ice', label: '🍦 Muzqaymoq' },
-  { key: 'food', label: '🍪 Yeguliklar' },
-  { key: 'drink', label: '🥤 Ichimliklar' },
-];
-
-let admin = { nick: 'admin', pass: 'admin123' };
-let isLoggedIn = false;
-
-let orders = [];
-let nextOrderId = 1;
-
-let cart = [];
-let currentCat = 'ice';
-let editingItemId = null;
-let currentTable = 'Stol #01'; // Default table
-
-// Read table from URL
-const urlParams = new URLSearchParams(window.location.search);
-if(urlParams.has('table')) {
-  currentTable = 'Stol #' + urlParams.get('table').padStart(2, '0');
-}
-
-// Default items if DB is empty
-const defaultItems = [
+let menuItems = [
   // ICE CREAM
   { id: 1, cat: 'ice', name: 'Qaymoqli klassik', price: 15000, icon: '🍦', hidden: false },
   { id: 2, cat: 'ice', name: 'Shokoladli premium', price: 18000, icon: '🍨', hidden: false },
@@ -84,94 +45,47 @@ const defaultItems = [
   { id: 37, cat: 'drink', name: 'Fanta tara (shisha)', price: 12000, hidden: false },
   { id: 38, cat: 'drink', name: 'Sprite tara (shisha)', price: 12000, hidden: false },
 ];
+let nextId = 39;
 
-// Setup Firebase Listeners
-db.ref('menuItems').on('value', snap => {
-  const data = snap.val();
-  if (!data) {
-    db.ref('menuItems').set(defaultItems);
-  } else {
-    menuItems = Array.isArray(data) ? data : Object.values(data);
-    nextId = Math.max(0, ...menuItems.map(i => i.id)) + 1;
-    if (document.getElementById('view-menu') && !document.getElementById('view-menu').classList.contains('hidden')) {
-      renderProducts();
-    }
-    if (document.getElementById('view-admin') && !document.getElementById('view-admin').classList.contains('hidden')) {
-      renderAdminGrid();
-    }
-  }
-});
+let categories = [
+  { key: 'ice', label: '🍦 Muzqaymoq' },
+  { key: 'food', label: '🍪 Yeguliklar' },
+  { key: 'drink', label: '🥤 Ichimliklar' },
+];
 
-db.ref('admin').on('value', snap => {
-  if (snap.val()) admin = snap.val();
-});
+let admin = { nick: 'admin', pass: 'admin123' };
+let isLoggedIn = false;
 
-db.ref('orders').on('value', snap => {
-  const data = snap.val();
-  if (data) {
-    orders = Array.isArray(data) ? data : Object.values(data);
-    orders.sort((a,b) => b.id - a.id); // Sort by ID descending
-    nextOrderId = Math.max(0, ...orders.map(o => o.id)) + 1;
-    if (document.getElementById('view-admin') && !document.getElementById('view-admin').classList.contains('hidden') && document.getElementById('tabOrders').classList.contains('active')) {
-      renderOrders();
-    }
-  } else {
-    orders = [];
-  }
-});
+let orders = []; // {id, table, location, items:[{name,price,qty}], total, status, time}
+let nextOrderId = 1;
 
-function syncMenu() {
-  db.ref('menuItems').set(menuItems).catch(err => alert("Saqlashda xatolik: " + err.message));
-}
-
-function syncOrders() {
-  db.ref('orders').set(orders).catch(err => alert("Saqlashda xatolik: " + err.message));
-}
-
-function syncAdmin() {
-  db.ref('admin').set(admin).catch(err => alert("Saqlashda xatolik: " + err.message));
-}
+let cart = []; // {key, name, price, qty}
+let currentCat = 'ice';
+let editingItemId = null;
 
 /* ======================= NAV ======================= */
 function hideAll() {
   ['view-home', 'view-menu', 'view-admin-login', 'view-admin'].forEach(id => {
-    const el = document.getElementById(id);
-    if(el) el.classList.add('hidden');
+    document.getElementById(id).classList.add('hidden');
   });
 }
 function renderHeader() {
   const right = document.getElementById('headerRight');
   const tag = document.getElementById('adminTag');
   if (isLoggedIn) {
-    if(tag) tag.textContent = ' — Admin';
-    if(right) right.innerHTML = `<button onclick="goHome()">🏠 Bosh sahifa</button><button class="dark" onclick="logout()">Chiqish</button>`;
+    tag.textContent = ' — Admin';
+    right.innerHTML = `<button onclick="goHome()">🏠 Bosh sahifa</button><button class="dark" onclick="logout()">Chiqish</button>`;
   } else {
-    if(tag) tag.textContent = '';
-    if(right) right.innerHTML = `<button onclick="goHome()">🏠 Bosh sahifa</button><button onclick="goMenu()">${currentTable}</button>`;
+    tag.textContent = '';
+    right.innerHTML = `<button onclick="goHome()">🏠 Bosh sahifa</button><button onclick="goMenu()">Stol: #01</button>`;
   }
 }
-function goHome() { 
-  hideAll(); 
-  const el = document.getElementById('view-home');
-  if(el) el.classList.remove('hidden'); 
-  renderHeader(); 
-}
-function goMenu() { 
-  hideAll(); 
-  const el = document.getElementById('view-menu');
-  if(el) el.classList.remove('hidden'); 
-  renderHeader(); 
-  if(document.getElementById('catTabs')) renderCatTabs(); 
-  if(document.getElementById('products')) renderProducts(); 
-  if(document.getElementById('cartItems')) renderCart(); 
-}
+function goHome() { hideAll(); document.getElementById('view-home').classList.remove('hidden'); renderHeader(); }
+function goMenu() { hideAll(); document.getElementById('view-menu').classList.remove('hidden'); renderHeader(); renderCatTabs(); renderProducts(); renderCart(); }
 function goAdminLogin() {
-  hideAll(); 
-  const el = document.getElementById('view-admin-login');
-  if(el) el.classList.remove('hidden'); 
-  renderHeader();
-  if(document.getElementById('hintNick')) document.getElementById('hintNick').textContent = admin.nick;
-  if(document.getElementById('hintPass')) document.getElementById('hintPass').textContent = admin.pass;
+  hideAll(); document.getElementById('view-admin-login').classList.remove('hidden'); renderHeader();
+  document.getElementById('hintNick').textContent = admin.nick;
+  document.getElementById('hintPass').textContent = admin.pass;
 }
 function logout() { isLoggedIn = false; goHome(); }
 
@@ -270,14 +184,13 @@ function placeOrder() {
   const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
   orders.unshift({
     id: nextOrderId++,
-    table: currentTable,
+    table: 'Stol #01',
     location: document.getElementById('locationSelect').value,
     items: cart.map(c => ({ name: c.name, price: c.price, qty: c.qty })),
     total,
     status: 'Kutilmoqda',
-    time: new Date().getTime() // Use timestamp for Firebase
+    time: new Date()
   });
-  syncOrders();
   cart = [];
   renderCart();
   showToast("Buyurtma qabul qilindi! Rahmat 🎉");
@@ -327,7 +240,7 @@ function renderOrders() {
       <div class="top">
         <div>
           <b>${o.table} · ${o.location}</b><br>
-          <span class="time">${new Date(o.time).toLocaleString('uz-UZ')}</span>
+          <span class="time">${o.time.toLocaleString('uz-UZ')}</span>
         </div>
         <span class="status-badge ${badgeClass}">${o.status.toUpperCase()}</span>
       </div>
@@ -343,7 +256,7 @@ function renderOrders() {
 }
 function updateOrderStatus(id, status) {
   const o = orders.find(o => o.id === id);
-  if (o) { o.status = status; syncOrders(); }
+  if (o) { o.status = status; renderOrders(); }
 }
 
 /* ======================= ADMIN: MENU ======================= */
@@ -376,15 +289,13 @@ function catLabel(cat) {
 }
 function toggleHide(id) {
   const it = menuItems.find(i => i.id === id);
-  if(it) {
-    it.hidden = !it.hidden;
-    syncMenu();
-  }
+  it.hidden = !it.hidden;
+  renderAdminGrid();
 }
 function deleteItem(id) {
   if (!confirm("Bu mahsulotni o'chirishni tasdiqlaysizmi?")) return;
   menuItems = menuItems.filter(i => i.id !== id);
-  syncMenu();
+  renderAdminGrid();
 }
 function openItemModal(id) {
   editingItemId = id;
@@ -424,7 +335,7 @@ function saveItem() {
     menuItems.push({ id: nextId++, cat, name, price, icon, hidden: false });
   }
   closeItemModal();
-  syncMenu();
+  renderAdminGrid();
 }
 
 /* ======================= ADMIN: SETTINGS ======================= */
@@ -435,7 +346,6 @@ function saveSettings() {
   if (pass) admin.pass = pass;
   document.getElementById('newNick').value = '';
   document.getElementById('newPass').value = '';
-  syncAdmin();
   showToast("Sozlamalar saqlandi");
 }
 
@@ -450,51 +360,4 @@ function showToast(msg) {
 }
 
 /* init */
-if (document.getElementById('view-home')) {
-  goHome();
-} else if (document.getElementById('view-admin-login')) {
-  goAdminLogin();
-}
-
-/* ======================= QR CODE ======================= */
-function generateQRCode() {
-  const tableNum = document.getElementById('qrTableNum').value.trim();
-  if (!tableNum) {
-    showToast("Iltimos, stol raqamini kiriting");
-    return;
-  }
-  
-  const qrResult = document.getElementById('qrResult');
-  const qrLink = document.getElementById('qrLink');
-  
-  qrResult.innerHTML = '';
-  
-  // Create full URL with current origin + ?table=
-  let baseUrl = window.location.origin + window.location.pathname;
-  if(baseUrl.endsWith('admin.html')) baseUrl = baseUrl.replace('admin.html', 'menu.html');
-  
-  const url = `${baseUrl}?table=${tableNum}`;
-  
-  new QRCode(qrResult, {
-    text: url,
-    width: 200,
-    height: 200,
-    colorDark : "#000000",
-    colorLight : "#ffffff",
-    correctLevel : QRCode.CorrectLevel.H
-  });
-  
-  qrLink.innerHTML = `<a href="${url}" target="_blank">${url}</a>`;
-  showToast("Stol " + tableNum + " uchun QR Kod yaratildi");
-}
-
-/* ======================= RESTORE MENU ======================= */
-function restoreDefaultMenu() {
-  if (confirm("Diqqat! Barcha joriy menyu ma'lumotlari o'chib, dastlabki 38 ta mahsulot tiklanadi. Tasdiqlaysizmi?")) {
-    db.ref('menuItems').set(defaultItems).then(() => {
-      showToast("Menyu muvaffaqiyatli tiklandi!");
-    }).catch(err => {
-      showToast("Xatolik: " + err.message);
-    });
-  }
-}
+goHome();

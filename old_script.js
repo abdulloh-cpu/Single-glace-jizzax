@@ -1,69 +1,30 @@
-const firebaseConfig = {
-  apiKey: "AIzaSyD75WGH4sVwTrC8Y6BgPLKg7GpObMjSAGY",
-  authDomain: "ice-cream-bceb2.firebaseapp.com",
-  databaseURL: "https://ice-cream-bceb2-default-rtdb.firebaseio.com",
-  projectId: "ice-cream-bceb2",
-  storageBucket: "ice-cream-bceb2.firebasestorage.app",
-  messagingSenderId: "212188278895",
-  appId: "1:212188278895:web:1492d327f91d9d321cdd9a",
-  measurementId: "G-YEWCJ0LF2L"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+﻿let ICONBG = ["#f79f1f", "#e15f41", "#8854d0", "#20bf6b", "#eb3b5a", "#0fb9b1", "#4b7bec", "#fa8231"];
 
-let ICONBG = ["#f79f1f", "#e15f41", "#8854d0", "#20bf6b", "#eb3b5a", "#0fb9b1", "#4b7bec", "#fa8231"];
-let menuItems = [];
-let nextId = 1;
-
-let categories = [
-  { key: 'ice', label: '🍦 Muzqaymoq' },
-  { key: 'food', label: '🍪 Yeguliklar' },
-  { key: 'drink', label: '🥤 Ichimliklar' },
-];
-
-let admin = { nick: 'admin', pass: 'admin123' };
-let isLoggedIn = false;
-
-let orders = [];
-let nextOrderId = 1;
-
-let cart = [];
-let currentCat = 'ice';
-let editingItemId = null;
-let currentTable = 'Stol #01'; // Default table
-
-// Read table from URL
-const urlParams = new URLSearchParams(window.location.search);
-if(urlParams.has('table')) {
-  currentTable = 'Stol #' + urlParams.get('table').padStart(2, '0');
-}
-
-// Default items if DB is empty
-const defaultItems = [
+let menuItems = [
   // ICE CREAM
-  { id: 1, cat: 'ice', name: 'Qaymoqli klassik', price: 15000, icon: '🍦', hidden: false },
-  { id: 2, cat: 'ice', name: 'Shokoladli premium', price: 18000, icon: '🍨', hidden: false },
-  { id: 3, cat: 'ice', name: 'Mevabop (Mix)', price: 20000, icon: '🍧', hidden: false },
-  { id: 4, cat: 'ice', name: 'Klassik Mix', price: 25000, icon: '🍦', hidden: false },
-  { id: 5, cat: 'ice', name: 'Shokolad Double', price: 25000, icon: '🍫', hidden: false },
-  { id: 6, cat: 'ice', name: 'Meva & Qaymoq', price: 25000, icon: '🍓', hidden: false },
+  { id: 1, cat: 'ice', name: 'Qaymoqli klassik', price: 15000, icon: '≡ƒìª', hidden: false },
+  { id: 2, cat: 'ice', name: 'Shokoladli premium', price: 18000, icon: '≡ƒì¿', hidden: false },
+  { id: 3, cat: 'ice', name: 'Mevabop (Mix)', price: 20000, icon: '≡ƒìº', hidden: false },
+  { id: 4, cat: 'ice', name: 'Klassik Mix', price: 25000, icon: '≡ƒìª', hidden: false },
+  { id: 5, cat: 'ice', name: 'Shokolad Double', price: 25000, icon: '≡ƒì½', hidden: false },
+  { id: 6, cat: 'ice', name: 'Meva & Qaymoq', price: 25000, icon: '≡ƒìô', hidden: false },
 
   // FOOD (Yeguliklar)
-  { id: 7, cat: 'food', name: 'Hot-dog bulichka', price: 17000, icon: '🌭', hidden: false },
-  { id: 8, cat: 'food', name: 'Hot-dog bulichka (katta)', price: 20000, icon: '🌭', hidden: false },
-  { id: 9, cat: 'food', name: 'Hot-dog non', price: 15000, icon: '🌭', hidden: false },
-  { id: 10, cat: 'food', name: 'Hot-dog non (2)', price: 17000, icon: '🌭', hidden: false },
-  { id: 11, cat: 'food', name: 'Hot-dog non (3)', price: 22000, icon: '🌭', hidden: false },
-  { id: 12, cat: 'food', name: 'Hot-dog non (4)', price: 28000, icon: '🌭', hidden: false },
-  { id: 13, cat: 'food', name: 'Mini lavash', price: 30000, icon: '🥙', hidden: false },
-  { id: 14, cat: 'food', name: 'Lavash', price: 35000, icon: '🥙', hidden: false },
-  { id: 15, cat: 'food', name: 'Big Lavash', price: 40000, icon: '🥙', hidden: false },
-  { id: 16, cat: 'food', name: 'Non Burger', price: 35000, icon: '🍔', hidden: false },
-  { id: 17, cat: 'food', name: 'Big Non Burger', price: 45000, icon: '🍔', hidden: false },
-  { id: 18, cat: 'food', name: 'Haggi', price: 30000, icon: '🍔', hidden: false },
-  { id: 19, cat: 'food', name: 'Haggi (katta)', price: 35000, icon: '🍔', hidden: false },
+  { id: 7, cat: 'food', name: 'Hot-dog bulichka', price: 17000, icon: '≡ƒî¡', hidden: false },
+  { id: 8, cat: 'food', name: 'Hot-dog bulichka (katta)', price: 20000, icon: '≡ƒî¡', hidden: false },
+  { id: 9, cat: 'food', name: 'Hot-dog non', price: 15000, icon: '≡ƒî¡', hidden: false },
+  { id: 10, cat: 'food', name: 'Hot-dog non (2)', price: 17000, icon: '≡ƒî¡', hidden: false },
+  { id: 11, cat: 'food', name: 'Hot-dog non (3)', price: 22000, icon: '≡ƒî¡', hidden: false },
+  { id: 12, cat: 'food', name: 'Hot-dog non (4)', price: 28000, icon: '≡ƒî¡', hidden: false },
+  { id: 13, cat: 'food', name: 'Mini lavash', price: 30000, icon: '≡ƒÑÖ', hidden: false },
+  { id: 14, cat: 'food', name: 'Lavash', price: 35000, icon: '≡ƒÑÖ', hidden: false },
+  { id: 15, cat: 'food', name: 'Big Lavash', price: 40000, icon: '≡ƒÑÖ', hidden: false },
+  { id: 16, cat: 'food', name: 'Non Burger', price: 35000, icon: '≡ƒìö', hidden: false },
+  { id: 17, cat: 'food', name: 'Big Non Burger', price: 45000, icon: '≡ƒìö', hidden: false },
+  { id: 18, cat: 'food', name: 'Haggi', price: 30000, icon: '≡ƒìö', hidden: false },
+  { id: 19, cat: 'food', name: 'Haggi (katta)', price: 35000, icon: '≡ƒìö', hidden: false },
 
-  // DRINKS (Ichimliklar) — rasmsiz, ba'zilarida hajm variantlari bor
+  // DRINKS (Ichimliklar) ΓÇö rasmsiz, ba'zilarida hajm variantlari bor
   { id: 20, cat: 'drink', name: 'Coca-Cola', variants: { '1L': 8000, '1,5L': 10000, '2L': 12000 }, hidden: false },
   { id: 21, cat: 'drink', name: 'Fanta', variants: { '1L': 8000, '1,5L': 10000, '2L': 12000 }, hidden: false },
   { id: 22, cat: 'drink', name: 'Sprite', variants: { '1L': 8000, '1,5L': 10000, '2L': 12000 }, hidden: false },
@@ -84,94 +45,47 @@ const defaultItems = [
   { id: 37, cat: 'drink', name: 'Fanta tara (shisha)', price: 12000, hidden: false },
   { id: 38, cat: 'drink', name: 'Sprite tara (shisha)', price: 12000, hidden: false },
 ];
+let nextId = 39;
 
-// Setup Firebase Listeners
-db.ref('menuItems').on('value', snap => {
-  const data = snap.val();
-  if (!data) {
-    db.ref('menuItems').set(defaultItems);
-  } else {
-    menuItems = Array.isArray(data) ? data : Object.values(data);
-    nextId = Math.max(0, ...menuItems.map(i => i.id)) + 1;
-    if (document.getElementById('view-menu') && !document.getElementById('view-menu').classList.contains('hidden')) {
-      renderProducts();
-    }
-    if (document.getElementById('view-admin') && !document.getElementById('view-admin').classList.contains('hidden')) {
-      renderAdminGrid();
-    }
-  }
-});
+let categories = [
+  { key: 'ice', label: '≡ƒìª Muzqaymoq' },
+  { key: 'food', label: '≡ƒì¬ Yeguliklar' },
+  { key: 'drink', label: '≡ƒÑñ Ichimliklar' },
+];
 
-db.ref('admin').on('value', snap => {
-  if (snap.val()) admin = snap.val();
-});
+let admin = { nick: 'admin', pass: 'admin123' };
+let isLoggedIn = false;
 
-db.ref('orders').on('value', snap => {
-  const data = snap.val();
-  if (data) {
-    orders = Array.isArray(data) ? data : Object.values(data);
-    orders.sort((a,b) => b.id - a.id); // Sort by ID descending
-    nextOrderId = Math.max(0, ...orders.map(o => o.id)) + 1;
-    if (document.getElementById('view-admin') && !document.getElementById('view-admin').classList.contains('hidden') && document.getElementById('tabOrders').classList.contains('active')) {
-      renderOrders();
-    }
-  } else {
-    orders = [];
-  }
-});
+let orders = []; // {id, table, location, items:[{name,price,qty}], total, status, time}
+let nextOrderId = 1;
 
-function syncMenu() {
-  db.ref('menuItems').set(menuItems).catch(err => alert("Saqlashda xatolik: " + err.message));
-}
-
-function syncOrders() {
-  db.ref('orders').set(orders).catch(err => alert("Saqlashda xatolik: " + err.message));
-}
-
-function syncAdmin() {
-  db.ref('admin').set(admin).catch(err => alert("Saqlashda xatolik: " + err.message));
-}
+let cart = []; // {key, name, price, qty}
+let currentCat = 'ice';
+let editingItemId = null;
 
 /* ======================= NAV ======================= */
 function hideAll() {
   ['view-home', 'view-menu', 'view-admin-login', 'view-admin'].forEach(id => {
-    const el = document.getElementById(id);
-    if(el) el.classList.add('hidden');
+    document.getElementById(id).classList.add('hidden');
   });
 }
 function renderHeader() {
   const right = document.getElementById('headerRight');
   const tag = document.getElementById('adminTag');
   if (isLoggedIn) {
-    if(tag) tag.textContent = ' — Admin';
-    if(right) right.innerHTML = `<button onclick="goHome()">🏠 Bosh sahifa</button><button class="dark" onclick="logout()">Chiqish</button>`;
+    tag.textContent = ' ΓÇö Admin';
+    right.innerHTML = `<button onclick="goHome()">≡ƒÅá Bosh sahifa</button><button class="dark" onclick="logout()">Chiqish</button>`;
   } else {
-    if(tag) tag.textContent = '';
-    if(right) right.innerHTML = `<button onclick="goHome()">🏠 Bosh sahifa</button><button onclick="goMenu()">${currentTable}</button>`;
+    tag.textContent = '';
+    right.innerHTML = `<button onclick="goHome()">≡ƒÅá Bosh sahifa</button><button onclick="goMenu()">Stol: #01</button>`;
   }
 }
-function goHome() { 
-  hideAll(); 
-  const el = document.getElementById('view-home');
-  if(el) el.classList.remove('hidden'); 
-  renderHeader(); 
-}
-function goMenu() { 
-  hideAll(); 
-  const el = document.getElementById('view-menu');
-  if(el) el.classList.remove('hidden'); 
-  renderHeader(); 
-  if(document.getElementById('catTabs')) renderCatTabs(); 
-  if(document.getElementById('products')) renderProducts(); 
-  if(document.getElementById('cartItems')) renderCart(); 
-}
+function goHome() { hideAll(); document.getElementById('view-home').classList.remove('hidden'); renderHeader(); }
+function goMenu() { hideAll(); document.getElementById('view-menu').classList.remove('hidden'); renderHeader(); renderCatTabs(); renderProducts(); renderCart(); }
 function goAdminLogin() {
-  hideAll(); 
-  const el = document.getElementById('view-admin-login');
-  if(el) el.classList.remove('hidden'); 
-  renderHeader();
-  if(document.getElementById('hintNick')) document.getElementById('hintNick').textContent = admin.nick;
-  if(document.getElementById('hintPass')) document.getElementById('hintPass').textContent = admin.pass;
+  hideAll(); document.getElementById('view-admin-login').classList.remove('hidden'); renderHeader();
+  document.getElementById('hintNick').textContent = admin.nick;
+  document.getElementById('hintPass').textContent = admin.pass;
 }
 function logout() { isLoggedIn = false; goHome(); }
 
@@ -189,7 +103,7 @@ function renderProducts() {
   const items = menuItems.filter(i => i.cat === currentCat && !i.hidden);
   box.innerHTML = items.map(item => {
     const showImg = false;
-    const imgHtml = showImg ? `<div class="img" style="background:${bgFor(item.id)}">${item.icon || '🍽️'}</div>` : '';
+    const imgHtml = showImg ? `<div class="img" style="background:${bgFor(item.id)}">${item.icon || '≡ƒì╜∩╕Å'}</div>` : '';
     if (item.variants) {
       const keys = Object.keys(item.variants);
       const volBtns = keys.map((v, i) => `
@@ -256,7 +170,7 @@ function renderCart() {
     <div class="cart-item">
       <span>${c.name}</span>
       <div class="qty-ctrl">
-        <button onclick="changeQty('${c.name.replace(/'/g, "\\'")}',-1)">−</button>
+        <button onclick="changeQty('${c.name.replace(/'/g, "\\'")}',-1)">ΓêÆ</button>
         <span>${c.qty}</span>
         <button onclick="changeQty('${c.name.replace(/'/g, "\\'")}',1)">+</button>
       </div>
@@ -266,21 +180,20 @@ function renderCart() {
   totalEl.textContent = fmt(total);
 }
 function placeOrder() {
-  if (cart.length === 0) { showToast("Savat bo'sh — avval mahsulot qo'shing"); return; }
+  if (cart.length === 0) { showToast("Savat bo'sh ΓÇö avval mahsulot qo'shing"); return; }
   const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
   orders.unshift({
     id: nextOrderId++,
-    table: currentTable,
+    table: 'Stol #01',
     location: document.getElementById('locationSelect').value,
     items: cart.map(c => ({ name: c.name, price: c.price, qty: c.qty })),
     total,
     status: 'Kutilmoqda',
-    time: new Date().getTime() // Use timestamp for Firebase
+    time: new Date()
   });
-  syncOrders();
   cart = [];
   renderCart();
-  showToast("Buyurtma qabul qilindi! Rahmat 🎉");
+  showToast("Buyurtma qabul qilindi! Rahmat ≡ƒÄë");
 }
 
 /* ======================= ADMIN LOGIN ======================= */
@@ -326,8 +239,8 @@ function renderOrders() {
     <div class="order-card">
       <div class="top">
         <div>
-          <b>${o.table} · ${o.location}</b><br>
-          <span class="time">${new Date(o.time).toLocaleString('uz-UZ')}</span>
+          <b>${o.table} ┬╖ ${o.location}</b><br>
+          <span class="time">${o.time.toLocaleString('uz-UZ')}</span>
         </div>
         <span class="status-badge ${badgeClass}">${o.status.toUpperCase()}</span>
       </div>
@@ -343,7 +256,7 @@ function renderOrders() {
 }
 function updateOrderStatus(id, status) {
   const o = orders.find(o => o.id === id);
-  if (o) { o.status = status; syncOrders(); }
+  if (o) { o.status = status; renderOrders(); }
 }
 
 /* ======================= ADMIN: MENU ======================= */
@@ -354,7 +267,7 @@ function renderAdminGrid() {
       ? Object.entries(item.variants).map(([k, v]) => `${k}: ${fmt(v)}`).join(' / ')
       : fmt(item.price);
     const showImg = false;
-    const imgHtml = showImg ? `<div class="img" style="background:${bgFor(item.id)}">${item.icon || '🍽️'}</div>` : '';
+    const imgHtml = showImg ? `<div class="img" style="background:${bgFor(item.id)}">${item.icon || '≡ƒì╜∩╕Å'}</div>` : '';
     return `
     <div class="admin-card ${item.hidden ? 'hidden-item' : ''}">
       ${imgHtml}
@@ -376,15 +289,13 @@ function catLabel(cat) {
 }
 function toggleHide(id) {
   const it = menuItems.find(i => i.id === id);
-  if(it) {
-    it.hidden = !it.hidden;
-    syncMenu();
-  }
+  it.hidden = !it.hidden;
+  renderAdminGrid();
 }
 function deleteItem(id) {
   if (!confirm("Bu mahsulotni o'chirishni tasdiqlaysizmi?")) return;
   menuItems = menuItems.filter(i => i.id !== id);
-  syncMenu();
+  renderAdminGrid();
 }
 function openItemModal(id) {
   editingItemId = id;
@@ -401,7 +312,7 @@ function openItemModal(id) {
     document.getElementById('mName').value = '';
     document.getElementById('mCat').value = currentCat === 'drink' ? 'drink' : 'ice';
     document.getElementById('mPrice').value = '';
-    document.getElementById('mIcon').value = '🍦';
+    document.getElementById('mIcon').value = '≡ƒìª';
   }
 }
 function closeItemModal() { document.getElementById('itemModalBg').classList.add('hidden'); editingItemId = null; }
@@ -409,7 +320,7 @@ function saveItem() {
   const name = document.getElementById('mName').value.trim();
   const cat = document.getElementById('mCat').value.trim() || 'ice';
   const price = Number(document.getElementById('mPrice').value) || 0;
-  const icon = document.getElementById('mIcon').value.trim() || '🍽️';
+  const icon = document.getElementById('mIcon').value.trim() || '≡ƒì╜∩╕Å';
   if (!name) { showToast("Nomini kiriting"); return; }
 
   if (editingItemId) {
@@ -424,7 +335,7 @@ function saveItem() {
     menuItems.push({ id: nextId++, cat, name, price, icon, hidden: false });
   }
   closeItemModal();
-  syncMenu();
+  renderAdminGrid();
 }
 
 /* ======================= ADMIN: SETTINGS ======================= */
@@ -435,7 +346,6 @@ function saveSettings() {
   if (pass) admin.pass = pass;
   document.getElementById('newNick').value = '';
   document.getElementById('newPass').value = '';
-  syncAdmin();
   showToast("Sozlamalar saqlandi");
 }
 
@@ -450,51 +360,4 @@ function showToast(msg) {
 }
 
 /* init */
-if (document.getElementById('view-home')) {
-  goHome();
-} else if (document.getElementById('view-admin-login')) {
-  goAdminLogin();
-}
-
-/* ======================= QR CODE ======================= */
-function generateQRCode() {
-  const tableNum = document.getElementById('qrTableNum').value.trim();
-  if (!tableNum) {
-    showToast("Iltimos, stol raqamini kiriting");
-    return;
-  }
-  
-  const qrResult = document.getElementById('qrResult');
-  const qrLink = document.getElementById('qrLink');
-  
-  qrResult.innerHTML = '';
-  
-  // Create full URL with current origin + ?table=
-  let baseUrl = window.location.origin + window.location.pathname;
-  if(baseUrl.endsWith('admin.html')) baseUrl = baseUrl.replace('admin.html', 'menu.html');
-  
-  const url = `${baseUrl}?table=${tableNum}`;
-  
-  new QRCode(qrResult, {
-    text: url,
-    width: 200,
-    height: 200,
-    colorDark : "#000000",
-    colorLight : "#ffffff",
-    correctLevel : QRCode.CorrectLevel.H
-  });
-  
-  qrLink.innerHTML = `<a href="${url}" target="_blank">${url}</a>`;
-  showToast("Stol " + tableNum + " uchun QR Kod yaratildi");
-}
-
-/* ======================= RESTORE MENU ======================= */
-function restoreDefaultMenu() {
-  if (confirm("Diqqat! Barcha joriy menyu ma'lumotlari o'chib, dastlabki 38 ta mahsulot tiklanadi. Tasdiqlaysizmi?")) {
-    db.ref('menuItems').set(defaultItems).then(() => {
-      showToast("Menyu muvaffaqiyatli tiklandi!");
-    }).catch(err => {
-      showToast("Xatolik: " + err.message);
-    });
-  }
-}
+goHome();

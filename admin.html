@@ -7,6 +7,135 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
+    <!-- ADMIN LOGIN -->
+    <div id="view-admin-login" class="hidden">
+      <div class="login-box">
+        <div class="icon">🍦</div>
+        <h2>Admin panel</h2>
+        <div class="sub">SINGLE ICECREAM boshqaruvi</div>
+        <label>Nik name</label>
+        <input id="loginNick" type="text" />
+        <label>Parol</label>
+        <input id="loginPass" type="password" />
+        <button onclick="tryLogin()">Kirish</button>
+        <div class="login-hint">
+          Standart: <b id="hintNick">admin</b> / <b id="hintPass">admin123</b>
+        </div>
+        <a class="back-link" href="javascript:void(0)" onclick="goHome()"
+          >← Bosh sahifaga qaytish</a
+        >
+      </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD -->
+    <div id="view-admin" class="hidden">
+      <div class="admin-tabs">
+        <button id="tabOrders" onclick="switchAdminTab('orders')">
+          Buyurtmalar
+        </button>
+        <button id="tabMenu" onclick="switchAdminTab('menu')">Menyu</button>
+        <button id="tabSettings" onclick="switchAdminTab('settings')">
+          Sozlamalar
+        </button>
+      </div>
+
+      <div class="admin-body">
+        <!-- Orders -->
+        <div id="adminOrders">
+          <h2
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
+            Buyurtmalar
+            <span
+              style="font-size: 12px; color: var(--muted); font-weight: normal"
+              >Har 3 soniyada avtomatik yangilanadi</span
+            >
+          </h2>
+          <div id="ordersList"></div>
+        </div>
+
+        <!-- Menu management -->
+        <div id="adminMenu" class="hidden">
+          <h2>Menyu boshqaruvi</h2>
+          <button class="add-item-btn" onclick="openItemModal(null)">
+            + Yangi mahsulot
+          </button>
+          <div class="admin-grid" id="adminGrid"></div>
+        </div>
+
+        <!-- Settings -->
+        <div id="adminSettings" class="hidden">
+          <h2>Nik name / parolni o'zgartirish</h2>
+          <div class="settings-box">
+            <div class="row">
+              <div>
+                <label>Yangi nik name</label>
+                <input id="newNick" type="text" />
+              </div>
+              <div>
+                <label>Yangi parol</label>
+                <input id="newPass" type="text" />
+              </div>
+            </div>
+            <button onclick="saveSettings()">Saqlash</button>
+          </div>
+          
+          <h2 style="margin-top: 30px;">Stol uchun QR Kod yaratish</h2>
+          <div class="settings-box">
+            <div class="row">
+              <div>
+                <label>Stol raqami (masalan: 1, 2, 3)</label>
+                <input id="qrTableNum" type="number" />
+              </div>
+            </div>
+            <button onclick="generateQRCode()">QR Kod yaratish</button>
+            <div id="qrResult" style="margin-top: 20px; display: flex; flex-direction: column; align-items: center;">
+              <!-- QR code will appear here -->
+            </div>
+            <div id="qrLink" style="text-align: center; margin-top: 10px; font-weight: bold; color: var(--primary);"></div>
+          </div>
+
+          <h2 style="margin-top: 30px; color: #eb3b5a;">Xavfli hudud (Danger Zone)</h2>
+          <div class="settings-box">
+            <p style="margin-bottom: 10px; font-size: 14px;">Agar menyudagi mahsulotlar o'chib ketgan yoki xato ishlagan bo'lsa, ularni boshlang'ich (38 ta) holatiga qaytarishingiz mumkin.</p>
+            <button class="cancel" style="width: 100%; background: #eb3b5a;" onclick="restoreDefaultMenu()">Boshlang'ich Menyuni Tiklash</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item edit modal -->
+    <div id="itemModalBg" class="modal-bg hidden">
+      <div class="modal">
+        <h3 id="modalTitle">Mahsulotni tahrirlash</h3>
+        <label>Nomi</label>
+        <input id="mName" />
+        <label>Kategoriya</label>
+        <input id="mCat" placeholder="ice / food / drink" />
+        <label>Narxi (variantsiz bo'lsa)</label>
+        <input id="mPrice" type="number" />
+        <label>Belgi (emoji)</label>
+        <input id="mIcon" placeholder="🍦" />
+        <div class="modal-btns">
+          <button class="cancel" onclick="closeItemModal()">
+            Bekor qilish
+          </button>
+          <button class="save" onclick="saveItem()">Saqlash</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase (v8 compat) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
+    <!-- QRCode Generator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
     <script src="./script.js"></script>
   </body>
 </html>
