@@ -21,7 +21,7 @@ let categories = [
   { key: 'drink', label: '🥤 Ichimliklar' },
 ];
 
-let admin = { nick: 'admin', pass: 'admin123' };
+let admin = { nick: 'single glace', pass: '995787887' };
 let isLoggedIn = false;
 
 let orders = [];

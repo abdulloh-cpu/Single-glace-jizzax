@@ -52,6 +52,7 @@ header .right button {
   border-radius: 20px;
   font-weight: bold;
   margin-left: 10px;
+  margin-bottom: 8px;
   cursor: pointer;
   font-size: 14px;
 }
@@ -72,6 +73,16 @@ header .right button.dark {
   padding: 40px 20px;
 }
 
+.tabs {
+  display: flex;
+  flex-wrap: wrap; /* Sig'may qolsa keyingi qatorga o'tishi uchun */
+  gap: 12px;       /* Tugmalar orasidagi masofa */
+  margin-top: 15px; /* Yuqoridagi "Joylashuv"dan ajratish uchun */
+}
+
+.tabs button {
+  padding: 10px 16px; /* Tugmaning ichki hajmini kattalashtirish */
+}
 #view-home .icon {
   font-size: 50px;
   margin-bottom: 10px;
@@ -703,9 +714,23 @@ header .right button.dark {
   z-index: 100;
 }
 
-@media(max-width:900px) {
+/* style.css fayli ichida */
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+
+@media(max-width:400px) {
   .products {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  header .right button {
+    margin-left: 0;
+    margin-top: 8px;
   }
 
   .content {
@@ -718,5 +743,13 @@ header .right button.dark {
 
   .admin-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
+/* Telefonlar uchun (768px dan kichik ekranlar) */
+@media (max-width: 768px) {
+  .admin-grid {
+    grid-template-columns: 1fr;
   }
 }
