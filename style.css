@@ -723,7 +723,7 @@ header .right button.dark {
 }
 
 
-@media(max-width:900px) {
+@media(max-width:500px) {
   .products {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -746,7 +746,7 @@ header .right button.dark {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 500px) {
   .admin-grid {
     grid-template-columns: 1fr;
   }
