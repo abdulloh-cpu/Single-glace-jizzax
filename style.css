@@ -723,7 +723,7 @@ header .right button.dark {
 }
 
 
-@media(max-width:400px) {
+@media(max-width:900px) {
   .products {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -746,8 +746,6 @@ header .right button.dark {
   }
 }
 
-
-/* Telefonlar uchun (768px dan kichik ekranlar) */
 @media (max-width: 768px) {
   .admin-grid {
     grid-template-columns: 1fr;
